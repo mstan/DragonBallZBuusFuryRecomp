@@ -1,8 +1,10 @@
 #include "buus_fury_extended_view.h"
 
 #include <array>
+#include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <limits>
 #include <unordered_map>
 #include <utility>
 
@@ -34,6 +36,9 @@ std::uint32_t g_field_objects[4] = {};
 std::unordered_map<
     std::uint32_t, std::array<std::uint8_t, kFieldChunkBytes>>
     g_decoded_chunks;
+std::unordered_map<std::uint32_t, std::pair<int, int>>
+    g_content_x_bounds;
+int g_render_view_shift = 0;
 
 gba::GbaBus* active_bus() {
     return gbarecomp::active_bus();
@@ -272,12 +277,14 @@ bool field_object_valid(
         return false;
     }
     const std::uint32_t resource = ewram32(bus, object + 8u);
-    const std::uint32_t width = ewram32(bus, object + 0x3Cu);
-    const std::uint32_t height = ewram32(bus, object + 0x40u);
+    // +0x3C/+0x40 are 10-bit fixed-point parallax scales copied from
+    // resource+0x04/+0x08 (1024 = 1x), not field dimensions.
+    const std::uint32_t scale_x = ewram32(bus, object + 0x3Cu);
+    const std::uint32_t scale_y = ewram32(bus, object + 0x40u);
     return resource >= 0x08000000u &&
         resource - 0x08000000u + 0x18u < bus->rom_size() &&
-        width > 0u && width <= 4096u &&
-        height > 0u && height <= 4096u;
+        scale_x > 0u && scale_x <= 4096u &&
+        scale_y > 0u && scale_y <= 4096u;
 }
 
 void resolve_field_objects(gba::GbaBus* bus) {
@@ -324,17 +331,18 @@ bool field_entry(
     if (!bus || !out_entry || world_x < 0 || world_y < 0)
         return false;
 
-    const int width = static_cast<std::int32_t>(
-        ewram32(bus, object + 0x3Cu));
-    const int height = static_cast<std::int32_t>(
-        ewram32(bus, object + 0x40u));
-    if (world_x >= width || world_y >= height)
-        return false;
-
     const std::uint32_t resource = ewram32(bus, object + 0x08u);
     const unsigned chunk_columns = mem8(bus, resource + 0x14u);
-    if (chunk_columns == 0u)
+    const unsigned chunk_rows = mem8(bus, resource + 0x15u);
+    if (chunk_columns == 0u || chunk_rows == 0u)
         return false;
+
+    // The resource's chunk grid is the authored map extent. Each descriptor
+    // expands to one 32x32-tile (256x256-pixel) field chunk.
+    if (static_cast<unsigned>(world_x) >= chunk_columns * 256u ||
+        static_cast<unsigned>(world_y) >= chunk_rows * 256u) {
+        return false;
+    }
 
     const unsigned tile_x = static_cast<unsigned>(world_x) >> 3;
     const unsigned tile_y = static_cast<unsigned>(world_y) >> 3;
@@ -344,14 +352,17 @@ bool field_entry(
     if (chunk_index > 0xFEu)
         return false;
 
-    // The renderer owns four 32x32 physical caches. object+0x20 records
-    // which resource chunk currently occupies each cache, while object+0x10
-    // holds its tile-data pointer. Resolving through that owner table is the
-    // critical distinction from treating the caches as one fixed 64x64 map.
+    // The renderer owns four fixed 32x32 physical caches beginning at +0x4C.
+    // object+0x20 records which resource chunk currently occupies each slot.
+    // The four pointers at +0x10 are instead the current 2x2 screen-quadrant
+    // assignment; they rotate and may point at the shared blank map when the
+    // camera crosses a resource edge. Pairing an owner byte with the same
+    // +0x10 index therefore produces the stale margin seam seen while walking.
     std::uint32_t chunk = 0;
     for (unsigned slot = 0; slot < 4; ++slot) {
         if (mem8(bus, object + 0x20u + slot) == chunk_index) {
-            chunk = ewram32(bus, object + 0x10u + slot * 4u);
+            chunk = object + 0x4Cu +
+                static_cast<std::uint32_t>(slot) * kFieldChunkBytes;
             break;
         }
     }
@@ -380,16 +391,15 @@ bool field_entry(
     return true;
 }
 
-extern "C" int buus_fury_tilemap_provider(
-    int bg, int hardware_x, int screen_y, std::uint16_t* out_entry) {
-    gba::GbaBus* bus = active_bus();
-    if (!out_entry || bg < 0 || bg > 3 || !is_overworld(bus))
-        return gba::kWsTilemapUnavailable;
-
+bool field_screen_entry(
+    gba::GbaBus* bus, int bg, int hardware_x, int screen_y,
+    std::uint16_t* out_entry) {
+    if (!bus || !out_entry || bg < 0 || bg > 3)
+        return false;
     resolve_field_objects(bus);
     const std::uint32_t object = g_field_objects[bg];
     if (!object)
-        return gba::kWsTilemapUnavailable;
+        return false;
 
     // +0x34/+0x38 are the layer's parallax offsets, not the camera.
     // The renderer writes the absolute layer scroll to BGxHOFS/VOFS and
@@ -409,9 +419,157 @@ extern "C" int buus_fury_tilemap_provider(
         chunk_x * 256 + hofs + (hofs < kFieldCacheBiasX ? 256 : 0);
     const int layer_scroll_y =
         chunk_y * 256 + vofs + (vofs < kFieldCacheBiasY ? 256 : 0);
-    const int world_x = layer_scroll_x + hardware_x;
-    const int world_y = layer_scroll_y + screen_y;
-    if (!field_entry(bus, object, world_x, world_y, out_entry))
+    return field_entry(
+        bus, object, layer_scroll_x + hardware_x,
+        layer_scroll_y + screen_y, out_entry);
+}
+
+int layer_scroll_x(gba::GbaBus* bus, int bg, std::uint32_t object) {
+    const int chunk_x = static_cast<std::int32_t>(
+        ewram32(bus, object + 0x24u));
+    const std::uint32_t bg_io =
+        0x010u + static_cast<std::uint32_t>(bg * 4);
+    const int hofs = bus->io().read16(bg_io) & 0xFF;
+    return chunk_x * 256 + hofs +
+        (hofs < kFieldCacheBiasX ? 256 : 0);
+}
+
+bool field_content_x_bounds(
+    gba::GbaBus* bus, std::uint32_t object,
+    int* out_min_x, int* out_max_x) {
+    if (!bus || !out_min_x || !out_max_x)
+        return false;
+    const std::uint32_t resource = ewram32(bus, object + 0x08u);
+    const auto cached = g_content_x_bounds.find(resource);
+    if (cached != g_content_x_bounds.end()) {
+        *out_min_x = cached->second.first;
+        *out_max_x = cached->second.second;
+        return true;
+    }
+
+    const unsigned chunk_columns = mem8(bus, resource + 0x14u);
+    const unsigned chunk_rows = mem8(bus, resource + 0x15u);
+    if (chunk_columns == 0u || chunk_rows == 0u)
+        return false;
+
+    int minimum_tile = std::numeric_limits<int>::max();
+    int maximum_tile = -1;
+    for (unsigned chunk_y = 0; chunk_y < chunk_rows; ++chunk_y) {
+        for (unsigned chunk_x = 0; chunk_x < chunk_columns; ++chunk_x) {
+            const unsigned chunk_index =
+                chunk_y * chunk_columns + chunk_x;
+            const std::uint32_t descriptor =
+                mem32(bus, resource + 0x18u + chunk_index * 4u);
+            const std::uint8_t* decoded =
+                decoded_field_chunk(bus, descriptor);
+            if (!decoded)
+                continue;
+            for (unsigned local_y = 0; local_y < 32u; ++local_y) {
+                for (unsigned local_x = 0; local_x < 32u; ++local_x) {
+                    const unsigned offset =
+                        (local_y * 32u + local_x) * 2u;
+                    const std::uint16_t entry =
+                        static_cast<std::uint16_t>(decoded[offset]) |
+                        static_cast<std::uint16_t>(
+                            decoded[offset + 1u] << 8);
+                    if ((entry & 0x03FFu) == 0u)
+                        continue;
+                    const int tile_x = static_cast<int>(
+                        chunk_x * 32u + local_x);
+                    minimum_tile = std::min(minimum_tile, tile_x);
+                    maximum_tile = std::max(maximum_tile, tile_x);
+                }
+            }
+        }
+    }
+    if (maximum_tile < minimum_tile)
+        return false;
+
+    const std::pair<int, int> bounds{
+        minimum_tile * 8, (maximum_tile + 1) * 8};
+    g_content_x_bounds.emplace(resource, bounds);
+    *out_min_x = bounds.first;
+    *out_max_x = bounds.second;
+    return true;
+}
+
+int calculate_view_shift(gba::GbaBus* bus) {
+    if (!bus)
+        return 0;
+    resolve_field_objects(bus);
+    int minimum = std::numeric_limits<int>::min();
+    int maximum = std::numeric_limits<int>::max();
+    bool constrained = false;
+    for (int bg = 0; bg < 4; ++bg) {
+        const std::uint32_t object = g_field_objects[bg];
+        int content_min = 0;
+        int content_max = 0;
+        if (!object || !field_content_x_bounds(
+                bus, object, &content_min, &content_max)) {
+            continue;
+        }
+        const int scroll = layer_scroll_x(bus, bg, object);
+        minimum = std::max(
+            minimum, static_cast<int>(g_ws_extra_left) +
+                content_min - scroll);
+        maximum = std::min(
+            maximum, content_max - scroll - 240 -
+                static_cast<int>(g_ws_extra_right));
+        constrained = true;
+    }
+    if (!constrained)
+        return 0;
+
+    // Keep the widened view inside the authored field. In ordinary areas the
+    // centered framing (zero) already fits. Near either field boundary slide
+    // the native viewport within the host output instead of requesting
+    // nonexistent map pixels and then manufacturing a mirrored/repeated fill.
+    if (minimum <= maximum) {
+        if (minimum > 0)
+            return minimum;
+        if (maximum < 0)
+            return maximum;
+        return 0;
+    }
+
+    // A field narrower than the requested host view cannot fill it. Center
+    // the authored resource; the tilemap provider will leave only the genuine
+    // out-of-field remainder transparent.
+    return minimum + (maximum - minimum) / 2;
+}
+
+extern "C" int buus_fury_bg_x_provider(
+    int bg, int output_x, int screen_y, int* out_hardware_x) {
+    gba::GbaBus* bus = active_bus();
+    if (!out_hardware_x || bg < 0 || bg > 3 || !is_overworld(bus))
+        return 0;
+
+    const int hardware_x =
+        output_x - static_cast<int>(g_ws_extra_left);
+    // Rendering visits BG3 first and begins at output (0,0). Refresh the
+    // framing once per composed frame rather than rescanning resource bounds
+    // in this per-pixel callback.
+    if (bg == 3 && output_x == 0 && screen_y == 0)
+        g_render_view_shift = calculate_view_shift(bus);
+
+    // This is placement of the native viewport within a wider host surface,
+    // not movement of the guest camera. Apply one screen-space displacement
+    // to every layer; each layer's own scroll already encodes its parallax.
+    const int shift = g_render_view_shift;
+    if (shift == 0)
+        return 0;
+
+    *out_hardware_x = hardware_x + shift;
+    return 1;
+}
+
+extern "C" int buus_fury_tilemap_provider(
+    int bg, int hardware_x, int screen_y, std::uint16_t* out_entry) {
+    gba::GbaBus* bus = active_bus();
+    if (!out_entry || bg < 0 || bg > 3 || !is_overworld(bus))
+        return gba::kWsTilemapUnavailable;
+
+    if (!field_screen_entry(bus, bg, hardware_x, screen_y, out_entry))
         return gba::kWsTilemapUnavailable;
     return gba::kWsTilemapReplace;
 }
@@ -433,8 +591,10 @@ extern "C" int buus_fury_obj_x_provider(
         return 1;
     }
 
+    const int view_shift = g_render_view_shift;
     const int widened_right = 240 + static_cast<int>(g_ws_extra_right);
-    *out_x = x <= widened_right ? x : x - 512;
+    const int world_x = x <= widened_right ? x : x - 512;
+    *out_x = world_x - view_shift;
     return 1;
 }
 
@@ -447,16 +607,19 @@ extern "C" int buus_fury_bus_read_override(
 
     // The actor renderer intersects each object's world rectangle with the
     // camera rectangle at 0x030019B[C..C8]. Widen only the horizontal bound
-    // reads in that predicate. The camera, streaming, and actor coordinates
-    // remain byte-for-byte native.
+    // reads in that predicate. Account for the asymmetric view shift at field
+    // edges while leaving camera, streaming, and actor coordinates native.
+    const int view_shift = calculate_view_shift(bus);
     if (pc == 0x08019C06u && address == kCameraLeft) {
-        *out_value =
-            original - static_cast<std::uint32_t>(g_ws_extra_left);
+        const int extension =
+            static_cast<int>(g_ws_extra_left) - view_shift;
+        *out_value = original - static_cast<std::uint32_t>(extension);
         return 1;
     }
     if (pc == 0x08019BFEu && address == kCameraRight) {
-        *out_value =
-            original + static_cast<std::uint32_t>(g_ws_extra_right);
+        const int extension =
+            static_cast<int>(g_ws_extra_right) + view_shift;
+        *out_value = original + static_cast<std::uint32_t>(extension);
         return 1;
     }
     return 0;
@@ -468,15 +631,19 @@ void install_extended_view(std::uint32_t, std::uint32_t) {
     for (std::uint32_t& object : g_field_objects)
         object = 0u;
     g_decoded_chunks.clear();
+    g_content_x_bounds.clear();
+    g_render_view_shift = 0;
     gba::g_ws_tilemap_provider = &buus_fury_tilemap_provider;
     gba::g_ws_authored_margin_layers = 1;
-    gba::g_ws_bg_x_provider = nullptr;
-    gba::g_ws_bg_x_provider_layers = 0;
+    gba::g_ws_bg_x_provider = &buus_fury_bg_x_provider;
+    gba::g_ws_bg_x_provider_layers =
+        (1u << 0) | (1u << 1) | (1u << 2) | (1u << 3);
     gba::g_ws_obj_attr_x_provider = &buus_fury_obj_x_provider;
     g_runtime_bus_read_override = &buus_fury_bus_read_override;
     std::fprintf(stderr,
-        "[buus-fury:view] authored BG0..BG3 field resources + exact chunk "
-        "decode + edge HUD + expanded actor visibility enabled\n");
+        "[buus-fury:view] authored BG0..BG3 field continuation + adaptive "
+        "boundary framing + exact chunk decode + edge HUD + expanded actor "
+        "visibility enabled\n");
 }
 
 }  // namespace buus_fury
