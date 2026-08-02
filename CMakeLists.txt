@@ -73,7 +73,9 @@ if(GBAGAME_RECOMP_UI)
         src)
     target_compile_definitions(game_launcher_ui PRIVATE
         GBARECOMP_ENABLE_MODS=1)
-    recomp_target_launcher_ui(game_launcher_ui CONSOLE gba)
+    recomp_target_launcher_ui(game_launcher_ui
+        CONSOLE gba
+        BOXART ${CMAKE_CURRENT_SOURCE_DIR}/recomp/launcher/boxart.tga)
     find_package(SDL2 REQUIRED)
     target_link_libraries(game_launcher_ui PUBLIC SDL2::SDL2)
     if(WIN32)

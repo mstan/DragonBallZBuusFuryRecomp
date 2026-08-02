@@ -16,6 +16,7 @@ saves/
 # Build output.
 build/
 build-*/
+release-stage/
 .bldtmp/
 artifacts/
 *.exe
