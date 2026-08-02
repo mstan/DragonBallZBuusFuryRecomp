@@ -3,6 +3,7 @@
 #include <array>
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <cstdio>
 #include <limits>
 #include <unordered_map>
@@ -29,9 +30,14 @@ namespace {
 constexpr std::uint32_t kFieldLayerVtable = 0x08049410u;
 constexpr std::uint32_t kCameraLeft = 0x030019BCu;
 constexpr std::uint32_t kCameraRight = 0x030019C4u;
+constexpr std::uint32_t kCameraX = 0x030019CCu;
+constexpr std::uint32_t kCameraY = 0x030019D0u;
+constexpr std::uint32_t kActorFixedX = 0x1A0u;
+constexpr std::uint32_t kActorFixedY = 0x1A4u;
 constexpr std::size_t kFieldChunkBytes = 0x800u;
 constexpr int kFieldCacheBiasX = 8;
 constexpr int kFieldCacheBiasY = 48;
+constexpr int kActorCullPadding = 32;
 std::uint32_t g_field_objects[4] = {};
 std::unordered_map<
     std::uint32_t, std::array<std::uint8_t, kFieldChunkBytes>>
@@ -39,6 +45,26 @@ std::unordered_map<
 std::unordered_map<std::uint32_t, std::pair<int, int>>
     g_content_x_bounds;
 int g_render_view_shift = 0;
+
+struct ObjXHistory {
+    std::uint16_t attr0_shape = 0;
+    std::uint16_t attr1_shape = 0;
+    std::uint16_t attr2 = 0;
+    int raw_y = 0;
+    int resolved_x = 0;
+    bool valid = false;
+};
+
+struct ActorHistory {
+    std::uint32_t object = 0;
+    std::uint32_t generation = 0;
+};
+
+std::array<ObjXHistory, 128> g_previous_obj_x{};
+std::array<ObjXHistory, 128> g_current_obj_x{};
+std::array<ActorHistory, 128> g_actor_history{};
+std::size_t g_actor_history_cursor = 0;
+std::uint32_t g_obj_x_generation = 1;
 
 gba::GbaBus* active_bus() {
     return gbarecomp::active_bus();
@@ -58,6 +84,8 @@ std::uint8_t mem8(gba::GbaBus* bus, std::uint32_t address) {
     if (!bus) return 0;
     if (address >= 0x02000000u && address < 0x02040000u)
         return bus->ewram_ptr()[address - 0x02000000u];
+    if (address >= 0x03000000u && address < 0x03008000u)
+        return bus->iwram_ptr()[address - 0x03000000u];
     if (address >= 0x08000000u &&
         address - 0x08000000u < bus->rom_size()) {
         return bus->rom_ptr()[address - 0x08000000u];
@@ -73,6 +101,78 @@ std::uint16_t mem16(gba::GbaBus* bus, std::uint32_t address) {
 std::uint32_t mem32(gba::GbaBus* bus, std::uint32_t address) {
     return static_cast<std::uint32_t>(mem16(bus, address)) |
         (static_cast<std::uint32_t>(mem16(bus, address + 2u)) << 16);
+}
+
+int distance(int a, int b) {
+    return std::abs(a - b);
+}
+
+bool adjacent_obj_generation(std::uint32_t generation) {
+    return generation == g_obj_x_generation ||
+        generation + 1u == g_obj_x_generation;
+}
+
+void remember_actor(gba::GbaBus* bus, std::uint32_t object) {
+    if (object < 0x02000000u ||
+        object + kActorFixedY + 3u >= 0x02040000u) {
+        return;
+    }
+    const std::uint32_t vtable = mem32(bus, object);
+    if (vtable < 0x08000000u || vtable >= 0x0A000000u)
+        return;
+
+    for (ActorHistory& actor : g_actor_history) {
+        if (actor.object == object) {
+            actor.generation = g_obj_x_generation;
+            return;
+        }
+    }
+    ActorHistory& actor = g_actor_history[
+        g_actor_history_cursor++ % g_actor_history.size()];
+    actor.object = object;
+    actor.generation = g_obj_x_generation;
+}
+
+bool match_actor_x(gba::GbaBus* bus, int raw_x, int raw_y, int* out_x) {
+    if (!bus || !out_x) return false;
+
+    const int camera_x =
+        static_cast<std::int32_t>(mem32(bus, kCameraX));
+    const int camera_y =
+        static_cast<std::int32_t>(mem32(bus, kCameraY));
+    int best_score = std::numeric_limits<int>::max();
+    int best_x = raw_x;
+    for (const ActorHistory& actor : g_actor_history) {
+        if (!actor.object || !adjacent_obj_generation(actor.generation))
+            continue;
+        const std::uint32_t vtable = mem32(bus, actor.object);
+        if (vtable < 0x08000000u || vtable >= 0x0A000000u)
+            continue;
+
+        const int actor_x = static_cast<std::int32_t>(
+            mem32(bus, actor.object + kActorFixedX)) >> 8;
+        const int actor_y = static_cast<std::int32_t>(
+            mem32(bus, actor.object + kActorFixedY)) >> 8;
+        const int expected_x = actor_x - camera_x;
+        const int expected_y = actor_y - camera_y;
+        const int dy = distance(raw_y, expected_y);
+        if (dy > 96) continue;
+
+        const int candidates[] = {raw_x, raw_x - 512};
+        for (const int candidate : candidates) {
+            const int dx = distance(candidate, expected_x);
+            if (dx > 96) continue;
+            const int score = dx + dy;
+            if (score < best_score) {
+                best_score = score;
+                best_x = candidate;
+            }
+        }
+    }
+    if (best_score == std::numeric_limits<int>::max())
+        return false;
+    *out_x = best_x;
+    return true;
 }
 
 class FieldBitReader {
@@ -549,8 +649,17 @@ extern "C" int buus_fury_bg_x_provider(
     // Rendering visits BG3 first and begins at output (0,0). Refresh the
     // framing once per composed frame rather than rescanning resource bounds
     // in this per-pixel callback.
-    if (bg == 3 && output_x == 0 && screen_y == 0)
+    if (bg == 3 && output_x == 0 && screen_y == 0) {
         g_render_view_shift = calculate_view_shift(bus);
+        g_previous_obj_x = g_current_obj_x;
+        g_current_obj_x = {};
+        if (++g_obj_x_generation == 0) {
+            g_previous_obj_x = {};
+            g_current_obj_x = {};
+            g_actor_history = {};
+            g_obj_x_generation = 1;
+        }
+    }
 
     // This is placement of the native viewport within a wider host surface,
     // not movement of the guest camera. Apply one screen-space displacement
@@ -576,7 +685,7 @@ extern "C" int buus_fury_tilemap_provider(
 
 extern "C" int buus_fury_obj_x_provider(
     int oam_index, std::uint16_t attr0, std::uint16_t attr1,
-    std::uint16_t, int* out_x) {
+    std::uint16_t attr2, int* out_x) {
     gba::GbaBus* bus = active_bus();
     if (!out_x || !is_overworld(bus)) return 0;
 
@@ -592,8 +701,49 @@ extern "C" int buus_fury_obj_x_provider(
     }
 
     const int view_shift = g_render_view_shift;
-    const int widened_right = 240 + static_cast<int>(g_ws_extra_right);
-    const int world_x = x <= widened_right ? x : x - 512;
+    // Expanded views make OAM X=256..511 ambiguous: those values may be
+    // genuine coordinates in the new right margin or hardware-wrapped
+    // negative coordinates leaving through the left edge. Resolve against
+    // live actor anchors first. The renderer compacts surviving pieces into
+    // different OAM slots as a composite actor leaves, so the continuity
+    // fallback matches piece attributes across the complete previous frame
+    // rather than assuming that an OAM index is a persistent identity.
+    const int widened_right = 240 +
+        static_cast<int>(g_ws_extra_right) + view_shift;
+    int world_x = x <= widened_right ? x : x - 512;
+    const int raw_y = y >= 160 ? y - 256 : y;
+    bool resolved = match_actor_x(bus, x, raw_y, &world_x);
+    if (oam_index >= 0 && oam_index < 128) {
+        if (!resolved) {
+            int best_distance = std::numeric_limits<int>::max();
+            for (const ObjXHistory& history : g_previous_obj_x) {
+                const bool same_piece =
+                    history.valid &&
+                    history.attr0_shape == (attr0 & 0xFF00u) &&
+                    history.attr1_shape == (attr1 & 0xFE00u) &&
+                    history.attr2 == attr2 &&
+                    distance(history.raw_y, raw_y) <= 8;
+                if (!same_piece) continue;
+
+                const int candidates[] = {x, x - 512};
+                for (const int candidate : candidates) {
+                    const int dx = distance(candidate, history.resolved_x);
+                    if (dx < best_distance) {
+                        best_distance = dx;
+                        world_x = candidate;
+                    }
+                }
+            }
+        }
+        ObjXHistory& history =
+            g_current_obj_x[static_cast<std::size_t>(oam_index)];
+        history.attr0_shape = attr0 & 0xFF00u;
+        history.attr1_shape = attr1 & 0xFE00u;
+        history.attr2 = attr2;
+        history.raw_y = raw_y;
+        history.resolved_x = world_x;
+        history.valid = true;
+    }
     *out_x = world_x - view_shift;
     return 1;
 }
@@ -606,19 +756,37 @@ extern "C" int buus_fury_bus_read_override(
         return 0;
 
     // The actor renderer intersects each object's world rectangle with the
-    // camera rectangle at 0x030019B[C..C8]. Widen only the horizontal bound
-    // reads in that predicate. Account for the asymmetric view shift at field
-    // edges while leaving camera, streaming, and actor coordinates native.
+    // camera rectangle at 0x030019B[C..C8]. 0x08010192 performs separate
+    // tests for the main meta-sprite and its auxiliary OAM piece; both must
+    // use the widened bounds or composite NPCs visibly shed pieces at the
+    // edge. Retain the older generic-object path for other overworld scenes.
+    const bool visibility_left =
+        pc == 0x08019C06u ||
+        pc == 0x08010216u ||
+        pc == 0x0801029Cu;
+    const bool visibility_right =
+        pc == 0x08019BFEu ||
+        pc == 0x08010210u ||
+        pc == 0x08010292u;
+    if (!visibility_left && !visibility_right)
+        return 0;
+
+    remember_actor(bus, g_cpu.R[4]);
+
+    // Account for asymmetric boundary framing while leaving the camera,
+    // streaming, and actor coordinates byte-for-byte native.
     const int view_shift = calculate_view_shift(bus);
-    if (pc == 0x08019C06u && address == kCameraLeft) {
+    if (visibility_left && address == kCameraLeft) {
         const int extension =
-            static_cast<int>(g_ws_extra_left) - view_shift;
+            static_cast<int>(g_ws_extra_left) - view_shift +
+            kActorCullPadding;
         *out_value = original - static_cast<std::uint32_t>(extension);
         return 1;
     }
-    if (pc == 0x08019BFEu && address == kCameraRight) {
+    if (visibility_right && address == kCameraRight) {
         const int extension =
-            static_cast<int>(g_ws_extra_right) + view_shift;
+            static_cast<int>(g_ws_extra_right) + view_shift +
+            kActorCullPadding;
         *out_value = original + static_cast<std::uint32_t>(extension);
         return 1;
     }
@@ -633,6 +801,11 @@ void install_extended_view(std::uint32_t, std::uint32_t) {
     g_decoded_chunks.clear();
     g_content_x_bounds.clear();
     g_render_view_shift = 0;
+    g_previous_obj_x = {};
+    g_current_obj_x = {};
+    g_actor_history = {};
+    g_actor_history_cursor = 0;
+    g_obj_x_generation = 1;
     gba::g_ws_tilemap_provider = &buus_fury_tilemap_provider;
     gba::g_ws_authored_margin_layers = 1;
     gba::g_ws_bg_x_provider = &buus_fury_bg_x_provider;
