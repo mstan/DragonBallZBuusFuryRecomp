@@ -1,0 +1,6 @@
+[submodule "recomp-ui"]
+	path = recomp-ui
+	url = https://github.com/mstan/recomp-ui.git
+[submodule "gbarecomp"]
+	path = gbarecomp
+	url = https://github.com/mstan/gbarecomp.git

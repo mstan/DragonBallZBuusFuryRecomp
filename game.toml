@@ -1,0 +1,5722 @@
+# Dragon Ball Z: Buu's Fury (USA, BG3E, revision 0).
+
+[game]
+name = "Dragon Ball Z: Buu's Fury"
+short_name = "dragon_ball_z_buus_fury"
+
+[program]
+name = "Dragon Ball Z: Buu's Fury (USA)"
+id = "BG3E"
+load_address = 0x08000000
+size = 0x00800000
+entry_pc = 0x08000000
+speculative_literal_harvest = false
+aot_scan_start = 0x080000C0
+aot_scan_end = 0x08030000
+static_resume_all = true
+codegen_shards = 32
+
+[identity]
+sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
+md5 = "808eda67b17c901e9052f47bdc419e2f"
+
+[bios]
+path = "gbarecomp/bios/gba_bios.bin"
+sha1 = "300c20df6731a33952ded8c436f7f186d25d3492"
+hle = false
+
+[rom]
+path = "roms/dragon_ball_z_buus_fury_usa.gba"
+sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
+
+[save]
+type = "eeprom"
+size = 8192
+path = "saves/dragon_ball_z_buus_fury_usa.sav"
+
+[runtime]
+debug_port = 19889
+window_title = "DragonBallZBuusFuryRecomp"
+
+[video]
+screen = "frontlit"
+view_width = 240
+resize_view = false
+
+[audio]
+shadow = false
+
+# Startup copies the immutable Webfoot support/IRQ image to IWRAM. A live
+# frame-300 dump matched ROM byte-for-byte through 0x03000F8F; the following
+# bytes are mutable state.
+[[code_copy]]
+runtime_start = 0x03000000
+source_start = 0x087B79A4
+size = 0x00000F90
+name = "iwram_support_code"
+note = "Exact live IWRAM/ROM match through offset 0xF8F"
+
+[[extra_func]]
+addr = 0x03000B6C
+source_addr = 0x087B8510
+mode = "arm"
+note = "Address-taken IRQ callback observed throughout the attract sequence"
+
+[[extra_func]]
+addr = 0x03000AE0
+source_addr = 0x087B8484
+mode = "arm"
+note = "Address-taken IRQ callback observed throughout the attract sequence"
+
+[[extra_func]]
+addr = 0x0300080C
+source_addr = 0x087B81B0
+mode = "arm"
+resume = true
+note = "Computed Duff-copy continuation inside the copied IWRAM support image"
+
+[[extra_func]]
+addr = 0x03000C7C
+source_addr = 0x087B8620
+mode = "arm"
+note = "Address-taken IWRAM callback observed during the attract sequence"
+
+[[extra_func]]
+addr = 0x0800419C
+mode = "thumb"
+note = "Address-taken startup callback"
+
+[[extra_func]]
+addr = 0x08004E26
+mode = "thumb"
+note = "Address-taken startup scene initializer"
+
+[[extra_func]]
+addr = 0x08004EA6
+mode = "thumb"
+note = "Per-frame startup scene callback"
+
+[[extra_func]]
+addr = 0x0803D81C
+mode = "thumb"
+note = "Per-frame attract callback"
+
+[[extra_func]]
+addr = 0x0803D784
+mode = "thumb"
+note = "Address-taken attract callback"
+
+[[extra_func]]
+addr = 0x0803F286
+mode = "thumb"
+note = "Address-taken startup object callback"
+
+[[extra_func]]
+addr = 0x0803F424
+mode = "thumb"
+note = "Per-frame startup object callback"
+
+[[extra_func]]
+addr = 0x08050364
+mode = "thumb"
+note = "Address-taken allocator callback installed by runtime initializer 2"
+
+[[extra_func]]
+addr = 0x0804E508
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x0804E54C
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x0804F5F8
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x0804FDA0
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x0804FDDC
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x0804FDE0
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x080501F8
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x08050534
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x08050760
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x08050790
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+[[extra_func]]
+addr = 0x08050868
+mode = "thumb"
+note = "Address-taken runtime object callback"
+
+# Address-taken attract-scene callbacks and computed resume targets observed
+# during the strict 2,400-frame coverage pass.
+[[extra_func]]
+addr = 0x08004EDA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080051E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080051FA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080053CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080067D6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080067F2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080067F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006802
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006812
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017A14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017AE6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E0B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E4E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E510
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E514
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E536
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E55C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E5AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E5CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E608
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E610
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E68C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E6AA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E6B2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E6C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E71A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E738
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E740
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E74E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E7C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E802
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E806
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E844
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E848
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E85A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E884
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E89A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E8A4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E8BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E8EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E8F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E904
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E90C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E928
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EB6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EB98
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EBC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECA6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECAE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4DC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F55C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F588
+mode = "thumb"
+
+# Additional address-taken callbacks and resume targets observed after the
+# first attract-coverage regeneration.
+[[extra_func]]
+addr = 0x08005366
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08005FD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800601E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006042
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800608A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006096
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006182
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800620C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800622E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006230
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006246
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080067A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080067B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08016260
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801627E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080162A4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080162A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080162BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803DADA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803DAE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F922
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050918
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050978
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006248
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800625E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006260
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800626A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F70C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F728
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F738
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F754
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F788
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F7BE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F82A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803FFE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803FFF2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08040000
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804000C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08053250
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805326A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08053274
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805327E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E58A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803E592
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EC3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EC44
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EC56
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08013F7C
+mode = "thumb"
+note = "Address-taken main gameplay scene callback reached from the title menu"
+
+[[extra_func]]
+addr = 0x08015516
+mode = "thumb"
+note = "Address-taken gameplay update callback"
+
+[[extra_func]]
+addr = 0x080174E8
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x080052C4
+mode = "thumb"
+note = "Address-taken gameplay object constructor"
+
+[[extra_func]]
+addr = 0x08051278
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x080529FC
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08016240
+mode = "thumb"
+note = "Address-taken gameplay object destructor"
+
+[[extra_func]]
+addr = 0x0801E4E0
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0801E6DA
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0801E4A0
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0801E6FC
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0801E68A
+mode = "thumb"
+note = "Address-taken gameplay scene initializer"
+
+[[extra_func]]
+addr = 0x0801E774
+mode = "thumb"
+note = "Address-taken gameplay scene callback adjacent to the observed object slab"
+
+[[extra_func]]
+addr = 0x0801E43C
+mode = "thumb"
+note = "Reviewed gameplay callback in the same address-taken scene slab"
+
+[[extra_func]]
+addr = 0x0801E578
+mode = "thumb"
+note = "Reviewed gameplay callback in the same address-taken scene slab"
+
+[[extra_func]]
+addr = 0x0801E7B4
+mode = "thumb"
+note = "Reviewed gameplay callback in the same address-taken scene slab"
+
+[[extra_func]]
+addr = 0x0801E84A
+mode = "thumb"
+note = "Reviewed gameplay callback in the same address-taken scene slab"
+
+# Reviewed virtual callbacks in the runtime object slab reached by gameplay.
+[[extra_func]]
+addr = 0x0804F500
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F508
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F510
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F53C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F574
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F58C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F594
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F59C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F60C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F620
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F648
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F678
+mode = "thumb"
+
+# Reviewed gameplay destructor/update slab. Several functions begin with an
+# address load before their push, so prologue-only discovery cannot find them.
+[[extra_func]]
+addr = 0x08050A10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050A94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050AA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050ABC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050AD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050AE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050AFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B7C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050B90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050BA4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050BBC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050BD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050BEC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050414
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050484
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805049C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080504B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050524
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050544
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050568
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805058C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080505B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050188
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080501FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050210
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050224
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050228
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805022C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050230
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050234
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050238
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805023C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080502A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080502AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080502BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080502FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050C88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050CA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050CB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050CDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050CF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D1C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D30
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D7C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050D94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050DAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050DC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050DD8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E00
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E58
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052DB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052DC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052DE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052DF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052E20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052E34
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052E48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052E60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052E74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052EB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052EC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052ED4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052EE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052F08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08005A50
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005A5A
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005ABE
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005AE4
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005C6E
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005CBA
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005D0A
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005D5A
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005E36
+mode = "thumb"
+resume = true
+note = "Computed case target in the eight-way gameplay scene dispatcher"
+
+[[extra_func]]
+addr = 0x08005864
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005898
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005882
+mode = "thumb"
+note = "Address-taken gameplay scene callback without a standard prologue"
+
+[[extra_func]]
+addr = 0x0800589C
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x080058AC
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x080058C6
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005948
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005578
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005632
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005740
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x0803F5A4
+mode = "thumb"
+note = "Address-taken gameplay graphics callback after a preceding epilogue"
+
+[[extra_func]]
+addr = 0x08013EEC
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08013F0C
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08013F24
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08013F58
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x080140D0
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x080140D2
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08014124
+mode = "thumb"
+note = "Reviewed gameplay object constructor"
+
+[[extra_func]]
+addr = 0x08014156
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08014188
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08005E3A
+mode = "thumb"
+note = "Reviewed gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08005E9A
+mode = "thumb"
+note = "Address-taken gameplay scene callback without a standard prologue"
+
+[[extra_func]]
+addr = 0x08005FA8
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08005FB2
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x08005FBE
+mode = "thumb"
+note = "Reviewed gameplay object callback"
+
+[[extra_func]]
+addr = 0x0805106C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051080
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805108C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080510A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080510C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080510F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051108
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805111C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051128
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805113C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051178
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080511B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080511CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051208
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805124C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051264
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051290
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080512A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080512BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E490
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E4FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E500
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E504
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E50C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E520
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E524
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E528
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E53C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E548
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E550
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E56C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E59C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E5B8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E5E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E608
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E624
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E63C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E658
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E674
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800700C
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08007040
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007064
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007074
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080070E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007116
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007124
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007132
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007174
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007178
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800717C
+mode = "thumb"
+
+# Reviewed virtual predicate/action callbacks. These are mostly leaf functions
+# without a push prologue, so each genuine start is explicit.
+[[extra_func]]
+addr = 0x0804FFF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFF8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050010
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050028
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805002C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050030
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050034
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805004C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050060
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050078
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050084
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050088
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500A4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080500F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050104
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050110
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050128
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805012C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050130
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050148
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805014C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050164
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050174
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050178
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDBC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDCC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDD0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDD8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FDE4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007A28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007A3E
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08007A40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007A60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007AB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007B26
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007B54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007B78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006B5E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006BA0
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08006BD0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006BE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006C18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006C3E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006C74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006CE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006D5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006D80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006D98
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006DCE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006DD6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006E0A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08006E24
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08006E3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801236E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080123A2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080123E8
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x080123FA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801240A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801241C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801242C
+mode = "thumb"
+note = "Address-taken gameplay object callback; distinct entry immediately after 0x0801241C return"
+
+[[extra_func]]
+addr = 0x08012430
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801243A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801244A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08012464
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801246E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080124D2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080124F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08003F48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08003F78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08003FEE
+mode = "thumb"
+note = "Address-taken gameplay support callback"
+
+[[extra_func]]
+addr = 0x08004038
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08004098
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08004102
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801774C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080177D2
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08017806
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801782C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801785C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017888
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080178C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E64
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051EAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051ECC
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08051EE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051EF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052038
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F638
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F650
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F65C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F668
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F674
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0804F680
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F690
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F69C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F6F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F708
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F716
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F726
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F730
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F75C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F764
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F790
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F798
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F7A6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F7B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F7D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F7E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F7E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007FE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800800A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08008086
+mode = "thumb"
+note = "Address-taken gameplay object callback without a standard prologue"
+
+[[extra_func]]
+addr = 0x08008098
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080080C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08008174
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08008192
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007D98
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007E84
+mode = "thumb"
+note = "Address-taken gameplay scene callback"
+
+[[extra_func]]
+addr = 0x08007F2E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052188
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080521B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080521C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080521E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080521F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052210
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052228
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052240
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08052254
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052268
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805227C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052294
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080522AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080522C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080522DC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080522F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805230C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052324
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805233C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052354
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052390
+mode = "thumb"
+
+# Reviewed leaf predicate/action slab used by gameplay object vtables.
+[[extra_func]]
+addr = 0x0804F900
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F92C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F930
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F934
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F938
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F93C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F940
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F964
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F980
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F998
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9D0
+mode = "thumb"
+note = "Address-taken gameplay predicate callback"
+
+[[extra_func]]
+addr = 0x0804F9D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9E2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F9F2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA02
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA62
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA8C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FA94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FAAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FAC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FADC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FAF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08012166
+mode = "thumb"
+note = "Address-taken gameplay scene predicate callback"
+
+[[extra_func]]
+addr = 0x0800B156
+mode = "thumb"
+note = "Address-taken animation update callback without a stack-frame prologue"
+
+[[extra_func]]
+addr = 0x0800B0A8
+mode = "thumb"
+note = "Address-taken gameplay input/update callback"
+
+[[extra_func]]
+addr = 0x0800AE00
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800AE64
+mode = "thumb"
+note = "Address-taken lifetime predicate callback without a stack-frame prologue"
+
+[[extra_func]]
+addr = 0x0800AE74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B188
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B2BE
+mode = "thumb"
+note = "Address-taken gameplay object destructor callback"
+
+[[extra_func]]
+addr = 0x0800B354
+mode = "thumb"
+note = "Address-taken sprite placement callback"
+
+[[extra_func]]
+addr = 0x0800B374
+mode = "thumb"
+note = "Address-taken sprite emission callback"
+
+[[extra_func]]
+addr = 0x0803F3D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F3DA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F3F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803F444
+mode = "thumb"
+note = "Address-taken sprite/tile raster callback"
+
+[[extra_func]]
+addr = 0x080523CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052418
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052454
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805246C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052484
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805249C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080524B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080524CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080524E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080524F8
+mode = "thumb"
+note = "Address-taken gameplay object destructor in the class callback slab"
+
+[[extra_func]]
+addr = 0x0805250C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052538
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052574
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080525B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080525C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080525E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052624
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052660
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052674
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805269C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080526B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080526C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080526DC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805270C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052748
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052784
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052798
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080527AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080527C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080527D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080527F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052808
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052834
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052860
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052874
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052888
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080528C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052900
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805293C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052978
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080529B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080529CC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080529E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052A10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052A24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052A60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052A9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052AE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052AF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052B0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052B20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052B60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052B78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052B90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052BA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052BC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052BD8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052BF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052C08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052C20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052C38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052C74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052C8C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052CA4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052CBC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052CD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052CE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052D14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052D2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052D44
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052D5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052D74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050950
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050964
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805098C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080509A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080509B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080509C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080509D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080509E8
+mode = "thumb"
+note = "Address-taken gameplay object destructor in the class callback slab"
+
+[[extra_func]]
+addr = 0x080509FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E684
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E6A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E6C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E6E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E6E8
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0804E6F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E714
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E784
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E79C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E7A4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E7C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E7DC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E800
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E808
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E824
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E834
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E850
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E85C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E878
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E894
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E904
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E92C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E938
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E958
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E974
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E988
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E9AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804E9E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EA2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EA3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EA60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EA84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EAA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EAF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB5E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EB9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EBAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EBC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EBEC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EC0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EC2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EC5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EC90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECA4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECD8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECEC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ECF8
+mode = "thumb"
+note = "Address-taken no-op gameplay callback"
+
+[[extra_func]]
+addr = 0x0804ECFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED10
+mode = "thumb"
+note = "Address-taken no-op gameplay callback"
+
+[[extra_func]]
+addr = 0x0804ED14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED30
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED34
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED44
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED4C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED58
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED64
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804ED6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EE04
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EEAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EED0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EEDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EEFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EF20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EF48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EF6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EF90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EFB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804EFDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F004
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F034
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F064
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F068
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F06C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F070
+mode = "thumb"
+note = "Address-taken gameplay object getter callback"
+
+[[extra_func]]
+addr = 0x0804F074
+mode = "thumb"
+note = "Address-taken no-op gameplay callback"
+
+[[extra_func]]
+addr = 0x0804F078
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F07C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F094
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0B8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F0EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F100
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F11C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F128
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F130
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F138
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F140
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F14C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F154
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F168
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F17C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F18C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F194
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F1B8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F1C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F210
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F248
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F250
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F258
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F264
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F26C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F278
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F288
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F2F8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F304
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F314
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F328
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F334
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F340
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F348
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F354
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F35C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F364
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F374
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F390
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F3A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F3B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F3BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F3F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802111C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08021174
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080211A8
+mode = "thumb"
+note = "Address-taken gameplay effect initializer"
+
+[[extra_func]]
+addr = 0x080211FA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08021270
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FF84
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0804FF94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FFE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051BB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051BCC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051BE0
+mode = "thumb"
+note = "Address-taken gameplay object destructor callback"
+
+[[extra_func]]
+addr = 0x08051C14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C44
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051C98
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051CD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051D10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051D40
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051D7C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051DA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051DE4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E64
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051E94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051EAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051ECC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051EE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051EF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051F94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FE8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051FFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052074
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080520B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080520EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052134
+mode = "thumb"
+note = "Address-taken gameplay object destructor callback"
+
+[[extra_func]]
+addr = 0x08052148
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08052160
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801952C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801957C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019594
+mode = "thumb"
+note = "Address-taken gameplay effect lifetime predicate"
+
+[[extra_func]]
+addr = 0x080195A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019628
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019658
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051600
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051618
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051630
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051648
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051660
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051678
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051690
+mode = "thumb"
+note = "Address-taken gameplay object destructor callback"
+
+[[extra_func]]
+addr = 0x080516A4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080516BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080516D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805170C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051748
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051760
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051778
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051790
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080517A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080517BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080517E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080517FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051814
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805182C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051844
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051858
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805186C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051884
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805189C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080518B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080518C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080518DC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080518F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051904
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805191C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051958
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051994
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080519D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051A0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051A48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051A88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051A9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051AB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051AF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051B28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802BFBC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802BFEC
+mode = "thumb"
+note = "Address-taken gameplay sprite writer callback"
+
+[[extra_func]]
+addr = 0x0802C040
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802C074
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802C08A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007674
+mode = "thumb"
+note = "Address-taken gameplay entity constructor"
+
+[[extra_func]]
+addr = 0x080076B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080076C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080076F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800770C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007714
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800773E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007386
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080073C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080073F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800742C
+mode = "thumb"
+note = "Address-taken gameplay entity constructor"
+
+[[extra_func]]
+addr = 0x08007464
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800748C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007498
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080074C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080074EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007542
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007790
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080077B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080077B4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080077DE
+mode = "thumb"
+note = "Address-taken gameplay entity data getter"
+
+[[extra_func]]
+addr = 0x080077EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007858
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08007916
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800797C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017DA2
+mode = "thumb"
+note = "Address-taken overworld interaction callback"
+
+[[extra_func]]
+addr = 0x08017DCA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017DF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017E64
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800DF8A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800DFAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800DFBE
+mode = "thumb"
+note = "Address-taken gameplay animation initializer"
+
+[[extra_func]]
+addr = 0x0800DFD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E00A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E044
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E050
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E074
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E0F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E0F4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E15C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E1AE
+mode = "thumb"
+note = "Address-taken gameplay animation callback"
+
+[[extra_func]]
+addr = 0x0800E1D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E2F2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800E344
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F784
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F82C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F840
+mode = "thumb"
+note = "Address-taken gameplay state getter"
+
+[[extra_func]]
+addr = 0x0804F858
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F860
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F86C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F874
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F894
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F898
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8B8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8D4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8EC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F8FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F944
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F968
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F97C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F518
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F51C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F520
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F524
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F528
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F52C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F530
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F534
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F538
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F550
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F554
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F558
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F570
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5B0
+mode = "thumb"
+note = "Address-taken no-op gameplay callback"
+
+[[extra_func]]
+addr = 0x0804F5C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804F5E4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08012FC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08012FE6
+mode = "thumb"
+note = "Address-taken gameplay animation callback"
+
+[[extra_func]]
+addr = 0x08013022
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C060
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C06C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C094
+mode = "thumb"
+note = "Address-taken gameplay event callback"
+
+[[extra_func]]
+addr = 0x0800C0C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C144
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C1BC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C1D2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C1E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010D7C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010D9A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010DAA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010DDE
+mode = "thumb"
+note = "Address-taken gameplay interaction dispatcher"
+
+[[extra_func]]
+addr = 0x08017C90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08017CE2
+mode = "thumb"
+note = "Address-taken overworld collision/interaction callback"
+
+[[extra_func]]
+addr = 0x0804B8DC
+mode = "arm"
+note = "Address-taken ARM-to-Thumb class thunk"
+
+[[extra_func]]
+addr = 0x0804B8F0
+mode = "arm"
+note = "Address-taken ARM-to-Thumb class thunk"
+
+[[extra_func]]
+addr = 0x0804B904
+mode = "arm"
+note = "Address-taken ARM-to-Thumb class thunk reached during gameplay"
+
+[[extra_func]]
+addr = 0x0804FB24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB6C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB8C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FB98
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x0804FBA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBCC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBD0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBD4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBD8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBF8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FBFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC1C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC2C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC3C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC40
+mode = "thumb"
+note = "Address-taken gameplay predicate in the virtual callback slab"
+
+[[extra_func]]
+addr = 0x0804FC44
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC48
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC4C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC58
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC5C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FC8C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCBC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCCC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCE4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCF8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FCFC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD0C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD24
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD28
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD4C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD70
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FD74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050E9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050EB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050EC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050EF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F4C
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08050F60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050F94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08050FA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015A30
+mode = "thumb"
+note = "Address-taken gameplay object callback"
+
+[[extra_func]]
+addr = 0x08015A50
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015A60
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015AA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015AA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015AB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015ABC
+mode = "thumb"
+note = "Address-taken gameplay position/update callback"
+
+[[extra_func]]
+addr = 0x08015AF0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015B1E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015B68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015B9E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015BB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BF34
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BF94
+mode = "thumb"
+note = "Address-taken timed gameplay object callback"
+
+[[extra_func]]
+addr = 0x0800BFCE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C060
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C06C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C094
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800C0C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800FFA2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010010
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801003A
+mode = "thumb"
+note = "Address-taken gameplay collision/culling callback"
+
+[[extra_func]]
+addr = 0x080102D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080174E8
+mode = "thumb"
+note = "Gameplay menu/action dispatcher host"
+
+[[extra_func]]
+addr = 0x08017500
+mode = "thumb"
+resume = true
+note = "Computed-dispatch interior target"
+
+[[extra_func]]
+addr = 0x0801754C
+mode = "thumb"
+resume = true
+
+[[extra_func]]
+addr = 0x08017568
+mode = "thumb"
+resume = true
+
+[[extra_func]]
+addr = 0x08017584
+mode = "thumb"
+resume = true
+
+[[extra_func]]
+addr = 0x080175A0
+mode = "thumb"
+resume = true
+
+[[extra_func]]
+addr = 0x080175CA
+mode = "thumb"
+resume = true
+
+[[extra_func]]
+addr = 0x080175FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EF08
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EF38
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EF66
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EF94
+mode = "thumb"
+note = "Address-taken gameplay render/culling callback"
+
+[[extra_func]]
+addr = 0x0800F3F8
+mode = "thumb"
+note = "Address-taken gameplay sprite upload callback"
+
+[[extra_func]]
+addr = 0x0800F40E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F4C0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F4E6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F516
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F53C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F558
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F58C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800F5C6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE1C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE20
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE54
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE74
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE7C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE84
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE88
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE8C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE90
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE98
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FE9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEA4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEA8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEAC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEBC
+mode = "thumb"
+note = "Address-taken no-op gameplay predicate callback"
+
+[[extra_func]]
+addr = 0x0804FEC0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0804FEF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051408
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805141C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051430
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051448
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051460
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051474
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051488
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0805149C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080514B0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080514C8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080514E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080514F8
+mode = "thumb"
+note = "Address-taken gameplay object destructor callback"
+
+[[extra_func]]
+addr = 0x0805150C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051524
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051550
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051598
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080515AC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080515E8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015944
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015958
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015978
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801599C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080159F4
+mode = "thumb"
+note = "Address-taken timed gameplay predicate"
+
+[[extra_func]]
+addr = 0x08015A04
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EB68
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EB6A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EB96
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EBF4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EBF6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EBF8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EC10
+mode = "thumb"
+note = "Address-taken sprite state callback"
+
+[[extra_func]]
+addr = 0x0803EC2A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803EC5A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECA2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECA4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECC2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECC4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ECC6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0803ED2A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EC34
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800ECB0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800ECDA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800ECF0
+mode = "thumb"
+note = "Address-taken gameplay sprite/frame callback"
+
+[[extra_func]]
+addr = 0x0800ED18
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800ED3E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800ED80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EDA6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EDF8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800EE78
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080204D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08020504
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0802055C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080205A4
+mode = "thumb"
+note = "Address-taken gameplay movement/update callback"
+
+[[extra_func]]
+addr = 0x080205E0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080205F0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08020610
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080206A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080206B8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080110D8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801111C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08011162
+mode = "thumb"
+note = "Address-taken gameplay animation-selection callback"
+
+[[extra_func]]
+addr = 0x08011172
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08011192
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080111A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08011200
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801124C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08011346
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08016208
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080162CC
+mode = "thumb"
+note = "Address-taken gameplay effect-spawn callback"
+
+[[extra_func]]
+addr = 0x080162E6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08016304
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08016384
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080163C4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080163E6
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08016428
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080164A0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080164D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BCC8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BD5A
+mode = "thumb"
+note = "Address-taken gameplay event callback"
+
+[[extra_func]]
+addr = 0x0800BD86
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BD92
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BDA0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800BE4E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019E9E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019EB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019EEE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019F14
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019F4A
+mode = "thumb"
+note = "Address-taken gameplay attribute callback"
+
+[[extra_func]]
+addr = 0x08019F72
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08019FEC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A014
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A064
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A07E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A0AA
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A0D0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A108
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0801A12E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B840
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B84A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B84E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B854
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B8B2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B8FC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800B928
+mode = "thumb"
+note = "Address-taken gameplay encounter/update callback"
+
+[[extra_func]]
+addr = 0x0800B99C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010B80
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010BB8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010BD2
+mode = "thumb"
+note = "Address-taken gameplay object update callback"
+
+[[extra_func]]
+addr = 0x08010BF2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010C9C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010CB4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010CD0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08010D26
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A218
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A222
+mode = "thumb"
+note = "Address-taken gameplay item/effect callback"
+
+[[extra_func]]
+addr = 0x0800A268
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A26A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A26E
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A278
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A2A8
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x0800A432
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015882
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080158F4
+mode = "thumb"
+note = "Address-taken gameplay transition callback"
+
+[[extra_func]]
+addr = 0x08015CE0
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015CE4
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015CF2
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015D10
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015DA8
+mode = "thumb"
+note = "Address-taken gameplay resource cleanup callback"
+
+[[extra_func]]
+addr = 0x08015DBE
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015E94
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08015F1C
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080150F4
+mode = "thumb"
+note = "Address-taken gameplay object/timer callback"
+
+[[extra_func]]
+addr = 0x0801514A
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x080154D4
+mode = "thumb"
+note = "Address-taken gameplay renderer callback"
+
+[[extra_func]]
+addr = 0x08006142
+mode = "thumb"
+note = "Address-taken gameplay object constructor"
+
+[[extra_func]]
+addr = 0x08006182
+mode = "thumb"
+note = "Adjacent gameplay object visibility callback"
+
+[[extra_func]]
+addr = 0x080061B2
+mode = "thumb"
+note = "Adjacent gameplay object position callback"
+
+[[extra_func]]
+addr = 0x0800620C
+mode = "thumb"
+note = "Adjacent gameplay object constructor variant"
+
+[[extra_func]]
+addr = 0x08006248
+mode = "thumb"
+note = "Adjacent gameplay object position callback variant"
+
+[[extra_func]]
+addr = 0x08006290
+mode = "thumb"
+note = "Adjacent gameplay object update callback"
+
+[[extra_func]]
+addr = 0x08016096
+mode = "thumb"
+note = "Adjacent gameplay position callback"
+
+[[extra_func]]
+addr = 0x080160CA
+mode = "thumb"
+note = "Address-taken gameplay multi-part renderer callback"
+
+[[extra_func]]
+addr = 0x08016188
+mode = "thumb"
+note = "Adjacent gameplay renderer update callback"
+
+[[extra_func]]
+addr = 0x08017350
+mode = "thumb"
+note = "Gameplay menu renderer host"
+
+[[extra_func]]
+addr = 0x080174BA
+mode = "thumb"
+resume = true
+note = "Gameplay menu renderer loop-exit continuation"
+
+[[extra_func]]
+addr = 0x080157A4
+mode = "thumb"
+note = "Address-taken gameplay resource update callback"
+
+[[extra_func]]
+addr = 0x0800DEE8
+mode = "thumb"
+note = "Campaign-observed gameplay helper entry"
+
+[[extra_func]]
+addr = 0x0800FF44
+mode = "thumb"
+note = "Campaign-observed gameplay helper entry"
+
+[[extra_func]]
+addr = 0x080131BA
+mode = "thumb"
+note = "Campaign-observed actor update entry"
+
+[[extra_func]]
+addr = 0x080171A8
+mode = "thumb"
+note = "Campaign-observed menu callback entry"
+
+[[extra_func]]
+addr = 0x0801765E
+mode = "thumb"
+note = "Campaign-observed menu position callback entry"
+
+[[extra_func]]
+addr = 0x08019888
+mode = "thumb"
+note = "Campaign-observed actor update entry"
+
+[[extra_func]]
+addr = 0x08019BE4
+mode = "thumb"
+note = "Campaign-observed actor callback entry"
+
+[[extra_func]]
+addr = 0x08019BF4
+mode = "thumb"
+note = "Campaign-observed actor culling callback entry"
+
+[[extra_func]]
+addr = 0x08019C44
+mode = "thumb"
+note = "Campaign-observed actor OAM callback entry"
+
+[[extra_func]]
+addr = 0x08019CA6
+mode = "thumb"
+note = "Campaign-observed actor graphics callback entry"
+
+[[extra_func]]
+addr = 0x0801AF2E
+mode = "thumb"
+note = "Campaign-observed effect destructor entry"
+
+[[extra_func]]
+addr = 0x0801AF3C
+mode = "thumb"
+note = "Campaign-observed effect update entry"
+
+[[extra_func]]
+addr = 0x0801AFE2
+mode = "thumb"
+note = "Campaign-observed effect state callback entry"
+
+[[extra_func]]
+addr = 0x08029014
+mode = "thumb"
+note = "Campaign-observed scene renderer entry"
+
+[[extra_func]]
+addr = 0x08029138
+mode = "thumb"
+note = "Campaign-observed scene renderer entry"
+
+[[extra_func]]
+addr = 0x08029192
+mode = "thumb"
+note = "Campaign-observed scene renderer entry"
+
+[[extra_func]]
+addr = 0x080292E0
+mode = "thumb"
+note = "Campaign-observed scene renderer entry"
+
+[[extra_func]]
+addr = 0x08029372
+mode = "thumb"
+note = "Address-taken scene predicate callback"
+
+[[extra_func]]
+addr = 0x08028FFE
+mode = "thumb"
+note = "Adjacent scene predicate callback"
+
+[[extra_func]]
+addr = 0x08029118
+mode = "thumb"
+note = "Address-taken scene cleanup callback"
+
+[[extra_func]]
+addr = 0x08029384
+mode = "thumb"
+note = "Adjacent scene renderer entry"
+
+[[extra_func]]
+addr = 0x0800DE54
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DE60
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DE6C
+mode = "thumb"
+note = "Address-taken gameplay animation callback"
+
+[[extra_func]]
+addr = 0x0800DE94
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DEA6
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DEB0
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DED0
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DEDC
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x0800DF1C
+mode = "thumb"
+note = "Gameplay animation callback family"
+
+[[extra_func]]
+addr = 0x08019858
+mode = "thumb"
+note = "Gameplay actor callback family"
+
+[[extra_func]]
+addr = 0x080199F6
+mode = "thumb"
+note = "Address-taken gameplay actor collision callback"
+
+[[extra_func]]
+addr = 0x08019B04
+mode = "thumb"
+note = "Gameplay actor constructor callback"
+
+[[extra_func]]
+addr = 0x08019CC4
+mode = "thumb"
+note = "Gameplay actor message callback"
+
+[[extra_func]]
+addr = 0x0801B002
+mode = "thumb"
+note = "Address-taken gameplay effect callback"
+
+[[extra_func]]
+addr = 0x0801B00A
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x0801B04A
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x0801B088
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x0801B248
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x0801B25A
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x0801B27A
+mode = "thumb"
+note = "Gameplay effect callback family"
+
+[[extra_func]]
+addr = 0x08050FDC
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08051030
+mode = "thumb"
+
+[[extra_func]]
+addr = 0x08012D8A
+mode = "thumb"
+note = "Traversal-observed address-taken gameplay callback"
+
+[[jump_table]]
+addr = 0x08048ED8
+stride = 4
+count = 136
+format = "pcrel_thumb"
+entries_mode = "thumb"
+name = "runtime_initializers"
+note = "Constructor table decoded from 0x08046AEC through exclusive end 0x080490F8"
+
+[[jump_table]]
+addr = 0x080490F8
+stride = 4
+count = 7
+format = "pcrel_thumb"
+entries_mode = "thumb"
+name = "runtime_destructors"
+note = "Destructor table decoded from 0x08046AC0 through exclusive end 0x08049114"

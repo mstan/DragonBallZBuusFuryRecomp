@@ -1,0 +1,24 @@
+format_version = 1
+id = "dragon-ball-z-buus-fury.enhancement.adaptive-view"
+version = "1.0.0"
+name = "Buu's Fury Adaptive Widescreen"
+author = "mstan"
+description = "Reveals more of the overworld as the window widens and anchors the HUD to the physical edges."
+license = "MIT"
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "dragon-ball-z-buus-fury-us"
+rom_sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
+
+[[feature]]
+id = "adaptive-view"
+name = "Adaptive Widescreen"
+description = "Expand the logical view from native 3:2 up to 3:1, including the overworld and HUD."
+group = "Display"
+default_enabled = false
+
+[[plugin]]
+feature = "adaptive-view"
+id = "dragon-ball-z-buus-fury.adaptive-view"

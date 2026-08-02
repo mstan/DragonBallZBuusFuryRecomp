@@ -1,0 +1,67 @@
+# User-provided cartridge ROMs and BIOS material (never commit).
+roms/
+*.gba
+*.GBA
+*.bin
+
+# Save data and save states.
+saves/
+*.sav
+*.srm
+*.fla
+*.flash
+*.state
+*.state[0-9]
+
+# Build output.
+build/
+build-*/
+.bldtmp/
+artifacts/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.tlog
+
+# Generated code is derived from the copyrighted ROM. Regenerate locally.
+generated/*.c
+generated/*.cpp
+generated/*.h
+generated/*.json
+!generated/README.md
+
+# Runtime caches and local launcher configuration.
+recomp_cache/
+bios.cfg
+rom.cfg
+keybinds.ini
+
+# Diagnostic and bring-up artifacts.
+_triage/
+_*
+*.log
+*.bmp
+*.png
+*.rgb
+*.csv
+*.frag
+*.bak
+*.local.toml
+*.local.ini
+recomp_coverage*.json
+recomp_master_misses*.toml.frag
+recomp_seed_proposals.toml
+selfheal*.json
+gameplay-selfheal*.json
+
+# IDE, OS, and language caches.
+.vs/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
