@@ -162,8 +162,64 @@ if ($forbidden) {
 }
 
 if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
-Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 
+# ZIP entry names must always use '/', regardless of the host OS.
+# Compress-Archive preserves Windows backslashes, which POSIX extractors
+# treat as literal filename characters rather than directory separators -- so
+# a Linux / Steam Deck / Proton user gets files literally named
+# "assets\fonts\LatoLatin-Regular.ttf" (and "mods\packages\..." where the
+# game ships a mod catalog), the nested trees are never created, and the
+# ImGui launcher finds neither its fonts nor its mods. Write portably here,
+# then verify before anyone can publish it.
+# (Convention ported from snesrecomp/SuperMarioWorldRecomp.)
+$rzStageFull = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $stage).Path)
+$rzZipFull = [IO.Path]::GetFullPath($zip)
+$rzPrefix = $rzStageFull.TrimEnd('\') + '\'
+$rzFiles = @(Get-ChildItem -LiteralPath $stage -File -Recurse |
+    Sort-Object FullName)
+$rzArchive = [IO.Compression.ZipFile]::Open(
+    $rzZipFull, [IO.Compression.ZipArchiveMode]::Create)
+try {
+    foreach ($rzFile in $rzFiles) {
+        $rzFull = [IO.Path]::GetFullPath($rzFile.FullName)
+        if (-not $rzFull.StartsWith(
+                $rzPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to archive a file outside the release stage: $rzFull"
+        }
+        $rzName = $rzFull.Substring($rzPrefix.Length).Replace('\', '/')
+        if ($rzName.StartsWith('/') -or $rzName -match '(^|/)..(/|$)') {
+            throw "Unsafe ZIP entry name: $rzName"
+        }
+        [IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+            $rzArchive, $rzFull, $rzName,
+            [IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+} finally {
+    $rzArchive.Dispose()
+}
+
+# Read the archive back and reject non-portable entry names outright, so a
+# regression in the writer cannot ship a Windows-only zip again.
+$rzArchive = [IO.Compression.ZipFile]::OpenRead($rzZipFull)
+try {
+    $rzBad = @($rzArchive.Entries | Where-Object {
+        $_.FullName.Contains('\') -or
+        $_.FullName.StartsWith('/') -or
+        $_.FullName -match '(^|/)..(/|$)'
+    })
+    if ($rzBad.Count -ne 0) {
+        throw "ZIP contains non-portable entry names: $(
+            ($rzBad | ForEach-Object FullName) -join ', ')"
+    }
+    if ($rzArchive.Entries.Count -ne $rzFiles.Count) {
+        throw "ZIP entry count mismatch: expected $($rzFiles.Count), got $(
+            $rzArchive.Entries.Count)"
+    }
+} finally {
+    $rzArchive.Dispose()
+}
 Write-Host "--- $stageName ---"
 Get-ChildItem -LiteralPath $stage | Select-Object Name, Length | Out-Host
 Get-Item -LiteralPath $zip | Select-Object Name, Length | Out-Host
