@@ -14,7 +14,7 @@ if (-not (Test-Path -LiteralPath $tool)) {
 }
 
 $actual = (Get-FileHash -LiteralPath $romPath -Algorithm SHA1).Hash.ToLowerInvariant()
-$expected = 'e65738e9d67688309f09811a54f495523ec9aada'
+$expected = 'f1c4b07554d2a3b1ad2f325307051e775ce68087'
 if ($actual -ne $expected) {
     throw "Buu's Fury ROM SHA-1 mismatch: got $actual expected $expected"
 }

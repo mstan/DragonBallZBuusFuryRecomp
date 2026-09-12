@@ -17,8 +17,8 @@ priority.
 
 ## Game-specific rules
 
-1. The supported ROM is USA revision 0 (`BG3E`), SHA-1
-   `e65738e9d67688309f09811a54f495523ec9aada`. Do not weaken the identity gate.
+1. The supported ROM is the clean USA revision 0 (`BG3E`) image, SHA-1
+   `f1c4b07554d2a3b1ad2f325307051e775ce68087`. Do not weaken the identity gate.
 2. ROMs, BIOS images, generated C/C++, saves, screenshots, and runtime caches
    are local artifacts and must never be committed.
 3. Generated code is never edited. Fix `game.toml`, the recompiler, or the

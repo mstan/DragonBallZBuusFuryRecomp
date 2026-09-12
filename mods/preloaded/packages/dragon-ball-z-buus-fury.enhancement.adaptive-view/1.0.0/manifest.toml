@@ -10,7 +10,7 @@ save_compatibility = "shared"
 
 [[target]]
 game_id = "dragon-ball-z-buus-fury-us"
-rom_sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
+rom_sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
 
 [[feature]]
 id = "adaptive-view"

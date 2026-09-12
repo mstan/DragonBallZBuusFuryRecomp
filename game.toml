@@ -1,4 +1,4 @@
-# Dragon Ball Z: Buu's Fury (USA, BG3E, revision 0).
+# Dragon Ball Z: Buu's Fury (USA, clean, BG3E, revision 0).
 
 [game]
 name = "Dragon Ball Z: Buu's Fury"
@@ -17,8 +17,8 @@ static_resume_all = true
 codegen_shards = 32
 
 [identity]
-sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
-md5 = "808eda67b17c901e9052f47bdc419e2f"
+sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
+md5 = "3a74fce97f1ea2b28c2a50ec3df0acee"
 
 [bios]
 path = "gbarecomp/bios/gba_bios.bin"
@@ -27,7 +27,7 @@ hle = false
 
 [rom]
 path = "roms/dragon_ball_z_buus_fury_usa.gba"
-sha1 = "e65738e9d67688309f09811a54f495523ec9aada"
+sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
 
 [save]
 type = "eeprom"

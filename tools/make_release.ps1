@@ -31,7 +31,7 @@ $build = Join-Path $root $BuildDir
 $out = Join-Path $root 'release-stage'
 $target = 'DragonBallZBuusFuryRecomp'
 $gameTitle = "Dragon Ball Z: Buu's Fury"
-$expectedSha1 = 'e65738e9d67688309f09811a54f495523ec9aada'
+$expectedSha1 = 'f1c4b07554d2a3b1ad2f325307051e775ce68087'
 $stageName = "$target-windows-x64-v$Version"
 $stage = Join-Path $out $stageName
 $zip = Join-Path $out "$stageName.zip"
@@ -118,7 +118,7 @@ if ($LASTEXITCODE -ne 0) { throw "Overlay toolchain staging failed ($LASTEXITCOD
 @"
 # $gameTitle - GBA static recompilation (Windows x64)
 
-This v$Version preview runs the USA retail game through gbarecomp with a
+This v$Version preview runs the clean USA retail game through gbarecomp with a
 recomp-ui launcher and an optional Adaptive Widescreen mod.
 
 This experimental build is a byproduct of developing and testing gbarecomp.
@@ -129,7 +129,7 @@ It has no affiliation with or endorsement from the game publisher.
 1. Extract this entire folder and keep its DLLs, assets, mods, and
    overlay_toolchain beside $target.exe.
 2. Run $target.exe.
-3. Select your legally obtained $gameTitle (USA) ROM.
+3. Select your legally obtained clean $gameTitle (USA) ROM.
    Expected SHA-1: $expectedSha1
 4. Select your legally obtained retail gba_bios.bin under Settings > System.
 5. Open Mods to opt into Adaptive Widescreen, then select PLAY.
