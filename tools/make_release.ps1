@@ -106,10 +106,15 @@ if (-not (Test-Path -LiteralPath (Join-Path $assets 'img\boxart.tga'))) {
 Copy-Item -LiteralPath $assets -Destination $stage -Recurse
 
 $mods = Join-Path $build 'mods'
-if (-not (Test-Path -LiteralPath (Join-Path $mods 'packages'))) {
+$modPackages = Join-Path $mods 'packages'
+if (-not (Test-Path -LiteralPath $modPackages)) {
     throw "Preloaded mod catalog is missing: $mods"
 }
-Copy-Item -LiteralPath $mods -Destination $stage -Recurse
+$stageMods = Join-Path $stage 'mods'
+New-Item -ItemType Directory -Force -Path $stageMods | Out-Null
+# `mods/state.toml` is per-machine enablement state.  Package the catalog,
+# never the developer's local feature choices.
+Copy-Item -LiteralPath $modPackages -Destination $stageMods -Recurse
 
 & (Join-Path $engine 'tools\fetch_tcc.ps1') `
     -Toolchain (Join-Path $stage 'overlay_toolchain') -EngineRoot $engine
