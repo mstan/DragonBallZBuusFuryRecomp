@@ -5720,3 +5720,954 @@ format = "pcrel_thumb"
 entries_mode = "thumb"
 name = "runtime_destructors"
 note = "Destructor table decoded from 0x08046AC0 through exclusive end 0x08049114"
+
+# ---- Coverage from the NovaPowers fork (novapowers0/DragonBallZBuusFuryRecomp, 2026-10-17) ----
+# Its 241 self-heal dispatch misses, re-verified here. Direct misses are kept only with
+# entry evidence (push{..lr} / STMFD prologue, BL target, or ROM code pointer). Interior
+# misses (mostly post-BL return points) are seeded as their containing function, so
+# static_resume_all emits the resume points instead of splitting functions.
+
+[[jump_table]]
+addr = 0x08055514
+stride = 4
+count = 10
+format = "abs32"
+entries_mode = "auto"
+note = "Verified ROM function-pointer table, 10 entries; holds NovaPowers fork and cheat sweep misses"
+
+[[extra_func]]
+addr = 0x08003E56
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (rom code pointer)"
+
+[[extra_func]]
+addr = 0x08004962
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x080059C8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x080062D8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08006514
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x080065E4
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x080068B8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 13 observed interior resume point(s), 10 post-BL)"
+
+[[extra_func]]
+addr = 0x080069E6
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x080071F8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080072CC
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 2 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x080079BC
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 2 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x080097A6
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x080097EA
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x0800D1BC
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 2 observed interior resume point(s), 2 post-BL)"
+
+[[extra_func]]
+addr = 0x08012B90
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08012BA2
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 2 observed interior resume point(s), 2 post-BL)"
+
+[[extra_func]]
+addr = 0x08012BC6
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 19 observed interior resume point(s), 10 post-BL)"
+
+[[extra_func]]
+addr = 0x08012D64
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08012DEE
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 17 observed interior resume point(s), 10 post-BL)"
+
+[[extra_func]]
+addr = 0x08012F6E
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x0801425C
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08014424
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08014526
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 3 post-BL)"
+
+[[extra_func]]
+addr = 0x08014588
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x080146B6
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08014770
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 5 observed interior resume point(s), 4 post-BL)"
+
+[[extra_func]]
+addr = 0x08014AC8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 2 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08014BBE
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08014C06
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08016574
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080167A0
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08016962
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 6 observed interior resume point(s), 6 post-BL)"
+
+[[extra_func]]
+addr = 0x08016AA8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08016C5E
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08016CE8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08016E4A
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 8 observed interior resume point(s), 8 post-BL)"
+
+[[extra_func]]
+addr = 0x08016FC4
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08017078
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x0801A216
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (rom code pointer)"
+
+[[extra_func]]
+addr = 0x0801A218
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x0801A334
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (rom code pointer)"
+
+[[extra_func]]
+addr = 0x0801A336
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x0801DFE0
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801E080
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 5 observed interior resume point(s), 2 post-BL)"
+
+[[extra_func]]
+addr = 0x0801E122
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 4 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08021740
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08021762
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x08021802
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802266E
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (rom code pointer)"
+
+[[extra_func]]
+addr = 0x08024C04
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08024C38
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 3 post-BL)"
+
+[[extra_func]]
+addr = 0x08024C54
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 9 observed interior resume point(s), 6 post-BL)"
+
+[[extra_func]]
+addr = 0x08025B20
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08025B34
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 13 observed interior resume point(s), 2 post-BL)"
+
+[[extra_func]]
+addr = 0x08025D4A
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 7 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08026BBC
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 11 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08026E6A
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 3 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08039480
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x080394E8
+mode = "thumb"
+note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+# Residual NovaPowers fork misses with no push{..lr}/BL/ROM-pointer evidence, audited
+# by disassembly as real entries. Interior case labels 0x080065D4/DA,
+# 0x08014BF6/FC and epilogue join 0x08026F6E are covered by their hosts above.
+
+[[extra_func]]
+addr = 0x080065BC
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf after literal pool: movs r0,#0; bx lr)"
+
+[[extra_func]]
+addr = 0x080065C0
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf switch after preceding bx-lr leaf; ldr r0,=; cmp r1 cases)"
+
+[[extra_func]]
+addr = 0x08007768
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf after literal pool: movs r0,#1; bx lr)"
+
+[[extra_func]]
+addr = 0x08007774
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (function after literal pool; ldr-based body)"
+
+[[extra_func]]
+addr = 0x080125E8
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (arg-shuffle then push {r3,lr}, after bx-lr + pad)"
+
+[[extra_func]]
+addr = 0x08012D78
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after pop {r4,pc})"
+
+[[extra_func]]
+addr = 0x080145BC
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (function after pop {r4-r6,pc}; ldr r0,= literal setup)"
+
+[[extra_func]]
+addr = 0x08014BBC
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (ldr r0,= then push {r4,lr} prologue)"
+
+[[extra_func]]
+addr = 0x08014BE2
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf switch (twin of 0x080065C0) after pop {r4,pc})"
+
+[[extra_func]]
+addr = 0x08016928
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after unconditional b.n)"
+
+[[extra_func]]
+addr = 0x08016C5C
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (ldr r3,= then push {r4,lr} prologue)"
+
+[[extra_func]]
+addr = 0x08016E36
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after pop {r4-r7,pc})"
+
+[[extra_func]]
+addr = 0x08025D2E
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after unconditional b.n)"
+
+[[extra_func]]
+addr = 0x08025D48
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (ldr r3,= then push {r4-r6,lr} prologue)"
+
+[[extra_func]]
+addr = 0x08026C62
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after pop {r3,pc})"
+
+[[extra_func]]
+addr = 0x08026EA4
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf method after pop {r3,pc})"
+
+[[extra_func]]
+addr = 0x08026F2A
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (push {r4} (no lr) leaf prologue after b.n)"
+
+[[extra_func]]
+addr = 0x080217AC
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (push {r4} (no lr) leaf prologue after b.n)"
+
+[[extra_func]]
+addr = 0x0804F090
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (empty bx-lr stub after pop {r3,pc})"
+
+[[extra_func]]
+addr = 0x0804F114
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (empty bx-lr stub after pop {r3,pc})"
+
+[[extra_func]]
+addr = 0x0804F1E8
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (empty bx-lr stub after literal pool)"
+
+[[extra_func]]
+addr = 0x0805135C
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (ldr r2,= then push {r3,lr} prologue)"
+
+[[extra_func]]
+addr = 0x0804993C
+mode = "arm"
+note = "NovaPowers fork miss, audited entry (C++ this-adjusting thunk (ldr ip; sub r0,#0x114; add ip,pc; bx ip) after data)"
+
+[[extra_func]]
+addr = 0x08049964
+mode = "arm"
+note = "NovaPowers fork miss, audited entry (C++ this-adjusting thunk after preceding thunk)"
+
+[[extra_func]]
+addr = 0x0804A47C
+mode = "arm"
+note = "NovaPowers fork miss, audited entry (C++ this-adjusting thunk after data)"
+
+[[extra_func]]
+addr = 0x0804A4A4
+mode = "arm"
+note = "NovaPowers fork miss, audited entry (C++ this-adjusting thunk after preceding thunk)"
+
+[[extra_func]]
+addr = 0x0800660E
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf after unconditional b.n, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08014C30
+mode = "thumb"
+note = "NovaPowers fork miss, audited entry (leaf after unconditional b.n, no local branch to it)"
+
+# ---- Gameplay coverage additions (Buu's Fury cheat sweep, 2026-10-17) ----
+# Dispatch misses from a timeboxed cheat sweep (intro, Other World, King Yemma castle)
+# under validation-only cheats. Each extra_func is a verified entry (push{..lr} /
+# STMFD prologue, BL target, or ROM code pointer). Each jump_table is a bounded run
+# of ROM code pointers whose members are all verified function starts.
+
+
+[[extra_func]]
+addr = 0x080075AC
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A446
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A46C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A5A8
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A624
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800AC40
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800AC64
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800ACB6
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800AD14
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800CF42
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800CF7A
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800CFE0
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800D232
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800DE28
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800F60E
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800FAE6
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800FAFA
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08011050
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801155C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x08013340
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08013352
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0801461A
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08014A9C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08016B66
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08016BCE
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0801794C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801796A
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08018432
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801A23A
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801A35A
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801BE40
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801D798
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801D988
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801DCD4
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801DFAC
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08020CB8
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08020CC8
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08020DAC
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08020FC4
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802262C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08022644
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0803947C
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x080394C8
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08039544
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F160
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08016ACC
+mode = "thumb"
+note = "Buu's Fury cheat sweep miss, audited entry (after a halfword data table, no local branch to it)"
+
+# ---- Gameplay coverage additions (Buu's Fury sweep round 2, 2026-10-17) ----
+# Dispatch misses from sweep round 2 (Other World combat, castle, dialogue, menus)
+# under validation-only cheats. Each extra_func is a verified entry (push{..lr} /
+# STMFD prologue, BL target, or ROM code pointer). Each jump_table is a bounded run
+# of ROM code pointers whose members are all verified function starts.
+
+[[extra_func]]
+addr = 0x0800B55C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800B5DE
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800D538
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800D6D2
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800D78A
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800DA92
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x0800DB52
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800F62C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800F76E
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800FA2A
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x0800FAB6
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800FD54
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08017EFE
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08018078
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801809E
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08018284
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801832E
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08018C08
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
+
+[[extra_func]]
+addr = 0x08018F0C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801900A
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019192
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019298
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019474
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0801BAE6
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801BB1A
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801BDD4
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801BE2E
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802084C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802214A
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802214C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08022186
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080222C2
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A8AA
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A904
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802A950
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802A9A8
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A9C6
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802BC70
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802BD04
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802BD90
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0803431C
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08049F98
+mode = "arm"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08049FAC
+mode = "arm"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F0C0
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F0D0
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F0DC
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F1B4
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F290
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x080513B8
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800B530
+mode = "thumb"
+note = "Buu's Fury sweep round 2 miss, audited entry (ldr r2,= then push {r4,lr}, after fixed-point literals 0xC0002100/0xC000A100)"
+
+[[extra_func]]
+addr = 0x08018C24
+mode = "thumb"
+note = "Buu's Fury replay miss, audited entry (after literal pool 0x080497D4, no local branch to it)"
