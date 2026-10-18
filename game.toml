@@ -6671,3 +6671,524 @@ note = "Buu's Fury sweep round 2 miss, audited entry (ldr r2,= then push {r4,lr}
 addr = 0x08018C24
 mode = "thumb"
 note = "Buu's Fury replay miss, audited entry (after literal pool 0x080497D4, no local branch to it)"
+
+# ---- Gameplay coverage additions (Buu's Fury warp sweep, 2026-10-17) ----
+# Dispatch misses from the warp sweep (all 392 maps from early, late and Thieves Den saves)
+# under validation-only cheats. Each extra_func is a verified entry (push{..lr} /
+# STMFD prologue, BL target, or ROM code pointer). Each jump_table is a bounded run
+# of ROM code pointers whose members are all verified function starts.
+
+[[extra_func]]
+addr = 0x0800887C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080088E6
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08008924
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800897A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08009E54
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A1AE
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A492
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800A4F0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A75A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A7A0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A7DE
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A810
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800A888
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800A8E8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800C368
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800C408
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800C4A6
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800C4DA
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0800CBA8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800CED0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800E3B2
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800E470
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0800E4C4
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080188F4
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801890A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08018BF0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08018C3A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080190DE
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019108
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019138
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801920E
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08019240
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801947C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080194C6
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0801A55E
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801C80A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801C8DC
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801CDC0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0801D004
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08023F0E
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08024012
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x080247BE
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080248DC
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08026618
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080266D8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08026726
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08026994
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08026A26
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08026B1A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08027A74
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08027B18
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08029978
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802A028
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (bl-target)"
+
+[[extra_func]]
+addr = 0x0802A276
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A5B0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A5C0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802A69A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802A704
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802AD58
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802ADAA
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802B5EA
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802B6D2
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802B708
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802C36A
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802C3D2
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802CAB8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802D0DC
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802D16C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802D1BA
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0802D940
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802DFD8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0802E040
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08033908
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08033B4C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x080342AE
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
+
+[[extra_func]]
+addr = 0x08034ED8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08036988
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08036AC2
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08036B9C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08036BF6
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08036C4E
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0803D110
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x08046CAC
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (push-lr prologue)"
+
+[[extra_func]]
+addr = 0x0804EA0C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F09C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F0E0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F148
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F15C
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F1C0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F284
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F298
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F2D0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F2E0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F2E4
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F2E8
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F350
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F388
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F3B0
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F448
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F450
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804F4E4
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x0804FDA4
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (start after terminator/literal pool, no local branch to it)"
+
+[[extra_func]]
+addr = 0x08051314
+mode = "thumb"
+note = "Buu's Fury warp sweep miss, verified entry (host of 1 observed interior resume point(s), 1 post-BL)"
