@@ -43,8 +43,8 @@ $zip = Join-Path $out "$stageName.zip"
 $dlls = @('SDL2.dll', 'libgcc_s_seh-1.dll', 'libstdc++-6.dll', 'libwinpthread-1.dll')
 
 foreach ($required in @(
-    (Join-Path $mingwBin 'cc.exe'),
-    (Join-Path $mingwBin 'c++.exe'),
+    (Join-Path $mingwBin 'gcc.exe'),
+    (Join-Path $mingwBin 'g++.exe'),
     (Join-Path $mingwBin 'ninja.exe'),
     (Join-Path $mingwBin 'strip.exe'),
     (Join-Path $engine 'CMakeLists.txt'),
@@ -68,8 +68,8 @@ $env:PATH = "$mingwBin;$env:PATH"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
 & cmake -S $root -B $build -G Ninja `
-    -DCMAKE_C_COMPILER="$mingwBin/cc.exe" `
-    -DCMAKE_CXX_COMPILER="$mingwBin/c++.exe" `
+    -DCMAKE_C_COMPILER="$mingwBin/gcc.exe" `
+    -DCMAKE_CXX_COMPILER="$mingwBin/g++.exe" `
     -DCMAKE_MAKE_PROGRAM="$mingwBin/ninja.exe" `
     -DCMAKE_BUILD_TYPE=Release `
     "-DGAME_BUILD_VERSION=$Version" `
@@ -96,7 +96,13 @@ if (Test-Path -LiteralPath $stage) {
     if (-not $resolvedStage.StartsWith("$resolvedOut\", [System.StringComparison]::OrdinalIgnoreCase)) {
         throw "Refusing to remove stage outside release output: $resolvedStage"
     }
-    Remove-Item -LiteralPath $resolvedStage -Recurse -Force
+    $stageItems = @(Get-Item -LiteralPath $resolvedStage) +
+        @(Get-ChildItem -LiteralPath $resolvedStage -Recurse -Force)
+    if ($stageItems | Where-Object {
+        ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) -or
+        $_.Name -eq '.git'
+    }) { throw 'Refusing to remove a stage containing a link or repository.' }
+    Remove-Item -LiteralPath $resolvedStage -Recurse
 }
 New-Item -ItemType Directory -Force -Path $stage | Out-Null
 Copy-Item -LiteralPath $exe -Destination $stage
@@ -178,7 +184,7 @@ if ($forbidden) {
     throw "Forbidden release content detected: $($forbidden.FullName -join ', ')"
 }
 
-if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
+if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip }
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
