@@ -39,6 +39,12 @@ constexpr int kFieldCacheBiasX = 8;
 constexpr int kFieldCacheBiasY = 48;
 constexpr int kActorCullPadding = 32;
 std::uint32_t g_field_objects[4] = {};
+gba::GbaBus* g_field_objects_bus = nullptr;
+std::uint64_t g_field_objects_frame = std::numeric_limits<std::uint64_t>::max();
+std::uint64_t g_field_objects_epoch = std::numeric_limits<std::uint64_t>::max();
+#if defined(BUUS_FURY_VIEW_TEST)
+unsigned g_field_scans = 0;
+#endif
 std::unordered_map<
     std::uint32_t, std::array<std::uint8_t, kFieldChunkBytes>>
     g_decoded_chunks;
@@ -388,10 +394,23 @@ bool field_object_valid(
 }
 
 void resolve_field_objects(gba::GbaBus* bus) {
+    const auto* ppu = gbarecomp::active_ppu();
+    const auto frame = ppu ? ppu->frame_count() : 0;
+    // A layer is optional. Cache absence as well as presence for this frame,
+    // rather than walking all EWRAM again for every margin pixel. State loads
+    // have a separate epoch because their frame number can repeat.
+    if (bus == g_field_objects_bus && frame == g_field_objects_frame &&
+        g_runtime_state_epoch == g_field_objects_epoch) return;
+    g_field_objects_bus = bus;
+    g_field_objects_frame = frame;
+    g_field_objects_epoch = g_runtime_state_epoch;
     bool current = true;
     for (int layer = 0; layer < 4; ++layer)
         current &= field_object_valid(bus, g_field_objects[layer], layer);
     if (current) return;
+#if defined(BUUS_FURY_VIEW_TEST)
+    ++g_field_scans;
+#endif
 
     for (std::uint32_t& object : g_field_objects)
         object = 0u;
@@ -498,7 +517,7 @@ bool field_screen_entry(
         return false;
     resolve_field_objects(bus);
     const std::uint32_t object = g_field_objects[bg];
-    if (!object)
+    if (!field_object_valid(bus, object, bg))
         return false;
 
     // +0x34/+0x38 are the layer's parallax offsets, not the camera.
@@ -752,7 +771,7 @@ extern "C" int buus_fury_bus_read_override(
     std::uint32_t pc, std::uint32_t address, std::uint32_t width,
     std::uint32_t original, std::uint32_t* out_value) {
     gba::GbaBus* bus = active_bus();
-    if (!out_value || width != 4u || !is_overworld(bus))
+    if (!out_value || width != 4u)
         return 0;
 
     // The actor renderer intersects each object's world rectangle with the
@@ -770,6 +789,7 @@ extern "C" int buus_fury_bus_read_override(
         pc == 0x08010292u;
     if (!visibility_left && !visibility_right)
         return 0;
+    if (!is_overworld(bus)) return 0;
 
     remember_actor(bus, g_cpu.R[4]);
 
@@ -798,6 +818,9 @@ extern "C" int buus_fury_bus_read_override(
 void install_extended_view(std::uint32_t, std::uint32_t) {
     for (std::uint32_t& object : g_field_objects)
         object = 0u;
+    g_field_objects_bus = nullptr;
+    g_field_objects_frame = std::numeric_limits<std::uint64_t>::max();
+    g_field_objects_epoch = std::numeric_limits<std::uint64_t>::max();
     g_decoded_chunks.clear();
     g_content_x_bounds.clear();
     g_render_view_shift = 0;
