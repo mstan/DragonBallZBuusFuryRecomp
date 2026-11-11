@@ -67,6 +67,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
     -DCMAKE_CXX_COMPILER="$mingwBin/c++.exe" `
     -DCMAKE_MAKE_PROGRAM="$mingwBin/ninja.exe" `
     -DCMAKE_BUILD_TYPE=Release `
+    "-DGAME_BUILD_VERSION=$Version" `
     "-DCMAKE_CXX_FLAGS_RELEASE=-O1 -DNDEBUG" `
     -DGBARECOMP_ROOT="$engine" `
     -DGBARECOMP_BUILD_ORACLE=OFF `

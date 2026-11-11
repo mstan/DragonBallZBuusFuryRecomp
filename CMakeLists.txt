@@ -3,7 +3,8 @@ project(DragonBallZBuusFuryRecomp C CXX)
 include(CTest)
 
 find_package(Git QUIET)
-if(GIT_FOUND)
+set(GAME_BUILD_VERSION "" CACHE STRING "Title package version (defaults to git describe)")
+if(NOT GAME_BUILD_VERSION AND GIT_FOUND)
     execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --always --dirty
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         OUTPUT_VARIABLE GAME_BUILD_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -66,8 +67,9 @@ target_link_libraries(DragonBallZBuusFuryRecomp PRIVATE
     gbarecomp_armv4t
     "-Wl,--end-group")
 
+set_property(SOURCE src/main.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    GBARECOMP_GAME_VERSION="${GAME_BUILD_VERSION}")
 target_compile_definitions(DragonBallZBuusFuryRecomp PRIVATE
-    GBARECOMP_GAME_VERSION="${GAME_BUILD_VERSION}"
     GBARECOMP_DEFAULT_DEBUG_PORT=19889
     GBARECOMP_WINDOW_TITLE="DragonBallZBuusFuryRecomp"
     GBARECOMP_DEFAULT_GAME_CONFIG="game.toml")
