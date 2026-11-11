@@ -7,6 +7,8 @@ void reset_adaptive_view() {
 }
 
 void activate_adaptive_view() {
+    // Begin in a wide window; subsequent resizes retain adaptive Fit behavior.
+    (void)gba_mod_set_view_width(288);
     (void)gba_mod_set_adaptive_view_enabled(1);
 }
 
