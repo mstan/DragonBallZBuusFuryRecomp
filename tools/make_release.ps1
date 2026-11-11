@@ -13,6 +13,7 @@ param(
     [Parameter(Mandatory = $true)][string]$Version,
     [string]$BuildDir = 'build-release',
     [string]$GbarecompRoot = '',
+    [string]$GeneratedBiosDir = '',
     [ValidateRange(1, 32)][int]$Jobs = 4
 )
 
@@ -27,6 +28,10 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $root = (Resolve-Path (Join-Path $scriptDir '..')).Path
 if (-not $GbarecompRoot) { $GbarecompRoot = Join-Path $root 'gbarecomp' }
 $engine = (Resolve-Path $GbarecompRoot).Path
+if (-not $GeneratedBiosDir) {
+    $GeneratedBiosDir = Join-Path $engine 'src\runtime\generated_bios'
+}
+$generatedBios = (Resolve-Path -LiteralPath $GeneratedBiosDir).Path
 $build = Join-Path $root $BuildDir
 $out = Join-Path $root 'release-stage'
 $target = 'DragonBallZBuusFuryRecomp'
@@ -44,8 +49,8 @@ foreach ($required in @(
     (Join-Path $mingwBin 'strip.exe'),
     (Join-Path $engine 'CMakeLists.txt'),
     (Join-Path $engine 'tools\fetch_tcc.ps1'),
-    (Join-Path $engine 'src\runtime\generated_bios\bios_recompiled.cpp'),
-    (Join-Path $engine 'src\runtime\generated_bios\bios_recompiled.h'),
+    (Join-Path $generatedBios 'bios_recompiled.cpp'),
+    (Join-Path $generatedBios 'bios_recompiled.h'),
     (Join-Path $root 'recomp\launcher\boxart.tga')
 )) {
     if (-not (Test-Path -LiteralPath $required)) {
@@ -70,6 +75,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
     "-DGAME_BUILD_VERSION=$Version" `
     "-DCMAKE_CXX_FLAGS_RELEASE=-O1 -DNDEBUG" `
     -DGBARECOMP_ROOT="$engine" `
+    "-DGBARECOMP_GENERATED_BIOS_DIR=$generatedBios" `
     -DGBARECOMP_BUILD_ORACLE=OFF `
     -DGBARECOMP_MINGW_PREFIX_UNIX='/c/msys64/mingw64' `
     -DSDL2_INCLUDE_DIR='C:/msys64/mingw64/include/SDL2' `
@@ -138,10 +144,14 @@ It has no affiliation with or endorsement from the game publisher.
 3. Select your legally obtained clean $gameTitle (USA) ROM.
    Expected SHA-1: $expectedSha1
 4. Select your legally obtained retail gba_bios.bin under Settings > System.
-5. Open Mods to opt into Adaptive Widescreen, then select PLAY.
+5. Select PLAY. Adaptive Widescreen is enabled for fresh profiles; Mods keeps
+   any saved enablement choice and lets you change it.
 
-Display, audio, input, and enhancement settings persist locally. Keyboard
-defaults: arrows = D-pad, Z = A, X = B, Enter = Start, Backspace = Select,
+Display, audio, input, and enhancement settings persist locally. Configure
+keyboard and gamepad bindings through Player 1 > Configure. Settings
+includes Integer scaling and Scanlines.
+
+Keyboard defaults: arrows = D-pad, Z = A, X = B, Enter = Start, Backspace = Select,
 and Tab = fast-forward. Shift+F1-F9 saves a state; F1-F9 loads one.
 
 The ROM and retail GBA BIOS are not included. Supply your own dumps.
@@ -158,7 +168,8 @@ $forbidden = Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {
         '.flash', '.state', '.json', '.log', '.apk') -or
     $relative -match '(^|\\)(generated|recomp_cache)(\\|$)' -or
     ($_.Extension -in @('.cpp', '.c', '.h') -and
-        $relative -notmatch '^overlay_toolchain\\') -or
+        $relative -notmatch '^overlay_toolchain\\' -and
+        $relative -notmatch '^external\\arm-recomp-core\\profiles\\armv4t_gba\\runtime_arm_types\.h$') -or
     $_.Name -ieq 'gba_bios.bin' -or
     $_.Name -in @('game.toml', 'rom.cfg', 'bios.cfg', 'config.ini',
         'keybinds.ini', 'mods.ini', 'state.toml')
