@@ -13,6 +13,7 @@ param(
     [Parameter(Mandatory = $true)][string]$Version,
     [string]$BuildDir = 'build-release',
     [string]$GbarecompRoot = '',
+    [string]$RecompUiRoot = '',
     [string]$GeneratedBiosDir = '',
     [ValidateRange(1, 32)][int]$Jobs = 4
 )
@@ -28,11 +29,13 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $root = (Resolve-Path (Join-Path $scriptDir '..')).Path
 if (-not $GbarecompRoot) { $GbarecompRoot = Join-Path $root 'gbarecomp' }
 $engine = (Resolve-Path $GbarecompRoot).Path
+if (-not $RecompUiRoot) { $RecompUiRoot = Join-Path $root 'recomp-ui' }
+$uiRoot = (Resolve-Path -LiteralPath $RecompUiRoot).Path
 if (-not $GeneratedBiosDir) {
     $GeneratedBiosDir = Join-Path $engine 'src\runtime\generated_bios'
 }
 $generatedBios = (Resolve-Path -LiteralPath $GeneratedBiosDir).Path
-$build = Join-Path $root $BuildDir
+$build = if ([IO.Path]::IsPathRooted($BuildDir)) { [IO.Path]::GetFullPath($BuildDir) } else { Join-Path $root $BuildDir }
 $out = Join-Path $root 'release-stage'
 $target = 'DragonBallZBuusFuryRecomp'
 $gameTitle = "Dragon Ball Z: Buu's Fury"
@@ -75,6 +78,8 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
     "-DGAME_BUILD_VERSION=$Version" `
     "-DCMAKE_CXX_FLAGS_RELEASE=-O1 -DNDEBUG" `
     -DGBARECOMP_ROOT="$engine" `
+    -DRECOMP_UI_ROOT="$uiRoot" `
+    -DGBARECOMP_RUNTIME_UI_ROOT="$uiRoot" `
     "-DGBARECOMP_GENERATED_BIOS_DIR=$generatedBios" `
     -DGBARECOMP_BUILD_ORACLE=OFF `
     -DGBARECOMP_MINGW_PREFIX_UNIX='/c/msys64/mingw64' `
@@ -168,6 +173,25 @@ Project: https://github.com/mstan/$target
 Engine: https://github.com/mstan/gbarecomp
 "@ | Out-File -LiteralPath (Join-Path $stage 'README.md') -Encoding utf8
 
+# Preserve only the authored runtime display model, not development metadata.
+$sourceToml = [IO.File]::ReadAllText((Join-Path $root 'game.toml'))
+$video = [regex]::Match($sourceToml, '(?ms)^\[video\]\s*\r?\n(.*?)(?=^\[|\z)')
+$screen = [regex]::Match($video.Groups[1].Value,
+    '(?m)^\s*screen\s*=\s*"([A-Za-z0-9_-]+)"\s*(?:#.*)?$')
+# No authored video.screen retains the runner's raw default.
+$screenName = if ($screen.Success) { $screen.Groups[1].Value } else { 'raw' }
+$runtimeConfig = "[video]`nscreen = `"$screenName`"`n"
+[IO.File]::WriteAllText((Join-Path $stage 'game.toml'), $runtimeConfig)
+$fontNotices = @('LatoLatin-OFL.txt', 'NotoSansSymbols2-OFL.txt', 'OpenMoji-LICENSE.txt')
+$fontNoticeStage = Join-Path $stage 'licenses/fonts'
+New-Item -ItemType Directory -Force -Path $fontNoticeStage | Out-Null
+foreach ($notice in $fontNotices) {
+    Copy-Item -LiteralPath (Join-Path $root "tools/release-licenses/$notice") -Destination $fontNoticeStage
+}
+& (Get-Command python.exe).Source (Join-Path $root 'tools/collect_licenses.py') `
+    $engine $uiRoot (Join-Path $stage 'licenses') --mingw (Split-Path $mingwBin)
+if ($LASTEXITCODE -ne 0) { throw 'Dependency notice staging failed.' }
+
 $forbidden = Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {
     $relative = $_.FullName.Substring($stage.Length + 1)
     $_.Extension -in @('.gba', '.bin', '.bios', '.sav', '.srm', '.fla',
@@ -177,7 +201,7 @@ $forbidden = Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {
         $relative -notmatch '^overlay_toolchain\\' -and
         $relative -notmatch '^external\\arm-recomp-core\\profiles\\armv4t_gba\\runtime_arm_types\.h$') -or
     $_.Name -ieq 'gba_bios.bin' -or
-    $_.Name -in @('game.toml', 'rom.cfg', 'bios.cfg', 'config.ini',
+    $_.Name -in @('rom.cfg', 'bios.cfg', 'config.ini',
         'keybinds.ini', 'mods.ini', 'state.toml')
 }
 if ($forbidden) {
@@ -235,6 +259,16 @@ try {
     if ($rzBad.Count -ne 0) {
         throw "ZIP contains non-portable entry names: $(
             ($rzBad | ForEach-Object FullName) -join ', ')"
+    }
+    $runtimeEntry = $rzArchive.GetEntry('game.toml')
+    if ($null -eq $runtimeEntry) { throw 'Runtime display config missing from ZIP.' }
+    $reader = [IO.StreamReader]::new($runtimeEntry.Open(), [Text.Encoding]::UTF8)
+    try { $packagedConfig = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    if ($packagedConfig -cne $runtimeConfig) { throw 'ZIP display config differs.' }
+    foreach ($notice in $fontNotices) {
+        if ($null -eq $rzArchive.GetEntry("licenses/fonts/$notice")) {
+            throw "Bundled font notice missing: $notice"
+        }
     }
     if ($rzArchive.Entries.Count -ne $rzFiles.Count) {
         throw "ZIP entry count mismatch: expected $($rzFiles.Count), got $(
