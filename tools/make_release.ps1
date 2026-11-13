@@ -13,6 +13,8 @@ param(
     [Parameter(Mandatory = $true)][string]$Version,
     [string]$BuildDir = 'build-release',
     [string]$GbarecompRoot = '',
+    [string]$RecompUiRoot = '',
+    [string]$GeneratedBiosDir = '',
     [ValidateRange(1, 32)][int]$Jobs = 4
 )
 
@@ -27,7 +29,13 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $root = (Resolve-Path (Join-Path $scriptDir '..')).Path
 if (-not $GbarecompRoot) { $GbarecompRoot = Join-Path $root 'gbarecomp' }
 $engine = (Resolve-Path $GbarecompRoot).Path
-$build = Join-Path $root $BuildDir
+if (-not $RecompUiRoot) { $RecompUiRoot = Join-Path $root 'recomp-ui' }
+$uiRoot = (Resolve-Path -LiteralPath $RecompUiRoot).Path
+if (-not $GeneratedBiosDir) {
+    $GeneratedBiosDir = Join-Path $engine 'src\runtime\generated_bios'
+}
+$generatedBios = (Resolve-Path -LiteralPath $GeneratedBiosDir).Path
+$build = if ([IO.Path]::IsPathRooted($BuildDir)) { [IO.Path]::GetFullPath($BuildDir) } else { Join-Path $root $BuildDir }
 $out = Join-Path $root 'release-stage'
 $target = 'DragonBallZBuusFuryRecomp'
 $gameTitle = "Dragon Ball Z: Buu's Fury"
@@ -38,14 +46,14 @@ $zip = Join-Path $out "$stageName.zip"
 $dlls = @('SDL2.dll', 'libgcc_s_seh-1.dll', 'libstdc++-6.dll', 'libwinpthread-1.dll')
 
 foreach ($required in @(
-    (Join-Path $mingwBin 'cc.exe'),
-    (Join-Path $mingwBin 'c++.exe'),
+    (Join-Path $mingwBin 'gcc.exe'),
+    (Join-Path $mingwBin 'g++.exe'),
     (Join-Path $mingwBin 'ninja.exe'),
     (Join-Path $mingwBin 'strip.exe'),
     (Join-Path $engine 'CMakeLists.txt'),
     (Join-Path $engine 'tools\fetch_tcc.ps1'),
-    (Join-Path $engine 'src\runtime\generated_bios\bios_recompiled.cpp'),
-    (Join-Path $engine 'src\runtime\generated_bios\bios_recompiled.h'),
+    (Join-Path $generatedBios 'bios_recompiled.cpp'),
+    (Join-Path $generatedBios 'bios_recompiled.h'),
     (Join-Path $root 'recomp\launcher\boxart.tga')
 )) {
     if (-not (Test-Path -LiteralPath $required)) {
@@ -63,12 +71,16 @@ $env:PATH = "$mingwBin;$env:PATH"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
 & cmake -S $root -B $build -G Ninja `
-    -DCMAKE_C_COMPILER="$mingwBin/cc.exe" `
-    -DCMAKE_CXX_COMPILER="$mingwBin/c++.exe" `
+    -DCMAKE_C_COMPILER="$mingwBin/gcc.exe" `
+    -DCMAKE_CXX_COMPILER="$mingwBin/g++.exe" `
     -DCMAKE_MAKE_PROGRAM="$mingwBin/ninja.exe" `
     -DCMAKE_BUILD_TYPE=Release `
+    "-DGAME_BUILD_VERSION=$Version" `
     "-DCMAKE_CXX_FLAGS_RELEASE=-O1 -DNDEBUG" `
     -DGBARECOMP_ROOT="$engine" `
+    -DRECOMP_UI_ROOT="$uiRoot" `
+    -DGBARECOMP_RUNTIME_UI_ROOT="$uiRoot" `
+    "-DGBARECOMP_GENERATED_BIOS_DIR=$generatedBios" `
     -DGBARECOMP_BUILD_ORACLE=OFF `
     -DGBARECOMP_MINGW_PREFIX_UNIX='/c/msys64/mingw64' `
     -DSDL2_INCLUDE_DIR='C:/msys64/mingw64/include/SDL2' `
@@ -89,7 +101,13 @@ if (Test-Path -LiteralPath $stage) {
     if (-not $resolvedStage.StartsWith("$resolvedOut\", [System.StringComparison]::OrdinalIgnoreCase)) {
         throw "Refusing to remove stage outside release output: $resolvedStage"
     }
-    Remove-Item -LiteralPath $resolvedStage -Recurse -Force
+    $stageItems = @(Get-Item -LiteralPath $resolvedStage) +
+        @(Get-ChildItem -LiteralPath $resolvedStage -Recurse -Force)
+    if ($stageItems | Where-Object {
+        ($_.Attributes -band [IO.FileAttributes]::ReparsePoint) -or
+        $_.Name -eq '.git'
+    }) { throw 'Refusing to remove a stage containing a link or repository.' }
+    Remove-Item -LiteralPath $resolvedStage -Recurse
 }
 New-Item -ItemType Directory -Force -Path $stage | Out-Null
 Copy-Item -LiteralPath $exe -Destination $stage
@@ -137,10 +155,14 @@ It has no affiliation with or endorsement from the game publisher.
 3. Select your legally obtained clean $gameTitle (USA) ROM.
    Expected SHA-1: $expectedSha1
 4. Select your legally obtained retail gba_bios.bin under Settings > System.
-5. Open Mods to opt into Adaptive Widescreen, then select PLAY.
+5. Select PLAY. Adaptive Widescreen is enabled for fresh profiles; Mods keeps
+   any saved enablement choice and lets you change it.
 
-Display, audio, input, and enhancement settings persist locally. Keyboard
-defaults: arrows = D-pad, Z = A, X = B, Enter = Start, Backspace = Select,
+Display, audio, input, and enhancement settings persist locally. Configure
+keyboard and gamepad bindings through Player 1 > Configure. Settings
+includes Integer scaling and Scanlines.
+
+Keyboard defaults: arrows = D-pad, Z = A, X = B, Enter = Start, Backspace = Select,
 and Tab = fast-forward. Shift+F1-F9 saves a state; F1-F9 loads one.
 
 The ROM and retail GBA BIOS are not included. Supply your own dumps.
@@ -151,22 +173,42 @@ Project: https://github.com/mstan/$target
 Engine: https://github.com/mstan/gbarecomp
 "@ | Out-File -LiteralPath (Join-Path $stage 'README.md') -Encoding utf8
 
+# Preserve only the authored runtime display model, not development metadata.
+$sourceToml = [IO.File]::ReadAllText((Join-Path $root 'game.toml'))
+$video = [regex]::Match($sourceToml, '(?ms)^\[video\]\s*\r?\n(.*?)(?=^\[|\z)')
+$screen = [regex]::Match($video.Groups[1].Value,
+    '(?m)^\s*screen\s*=\s*"([A-Za-z0-9_-]+)"\s*(?:#.*)?$')
+# No authored video.screen retains the runner's raw default.
+$screenName = if ($screen.Success) { $screen.Groups[1].Value } else { 'raw' }
+$runtimeConfig = "[video]`nscreen = `"$screenName`"`n"
+[IO.File]::WriteAllText((Join-Path $stage 'game.toml'), $runtimeConfig)
+$fontNotices = @('LatoLatin-OFL.txt', 'NotoSansSymbols2-OFL.txt', 'OpenMoji-LICENSE.txt')
+$fontNoticeStage = Join-Path $stage 'licenses/fonts'
+New-Item -ItemType Directory -Force -Path $fontNoticeStage | Out-Null
+foreach ($notice in $fontNotices) {
+    Copy-Item -LiteralPath (Join-Path $root "tools/release-licenses/$notice") -Destination $fontNoticeStage
+}
+& (Get-Command python.exe).Source (Join-Path $root 'tools/collect_licenses.py') `
+    $engine $uiRoot (Join-Path $stage 'licenses') --mingw (Split-Path $mingwBin)
+if ($LASTEXITCODE -ne 0) { throw 'Dependency notice staging failed.' }
+
 $forbidden = Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {
     $relative = $_.FullName.Substring($stage.Length + 1)
     $_.Extension -in @('.gba', '.bin', '.bios', '.sav', '.srm', '.fla',
         '.flash', '.state', '.json', '.log', '.apk') -or
     $relative -match '(^|\\)(generated|recomp_cache)(\\|$)' -or
     ($_.Extension -in @('.cpp', '.c', '.h') -and
-        $relative -notmatch '^overlay_toolchain\\') -or
+        $relative -notmatch '^overlay_toolchain\\' -and
+        $relative -notmatch '^external\\arm-recomp-core\\profiles\\armv4t_gba\\runtime_arm_types\.h$') -or
     $_.Name -ieq 'gba_bios.bin' -or
-    $_.Name -in @('game.toml', 'rom.cfg', 'bios.cfg', 'config.ini',
+    $_.Name -in @('rom.cfg', 'bios.cfg', 'config.ini',
         'keybinds.ini', 'mods.ini', 'state.toml')
 }
 if ($forbidden) {
     throw "Forbidden release content detected: $($forbidden.FullName -join ', ')"
 }
 
-if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
+if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip }
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
@@ -217,6 +259,16 @@ try {
     if ($rzBad.Count -ne 0) {
         throw "ZIP contains non-portable entry names: $(
             ($rzBad | ForEach-Object FullName) -join ', ')"
+    }
+    $runtimeEntry = $rzArchive.GetEntry('game.toml')
+    if ($null -eq $runtimeEntry) { throw 'Runtime display config missing from ZIP.' }
+    $reader = [IO.StreamReader]::new($runtimeEntry.Open(), [Text.Encoding]::UTF8)
+    try { $packagedConfig = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    if ($packagedConfig -cne $runtimeConfig) { throw 'ZIP display config differs.' }
+    foreach ($notice in $fontNotices) {
+        if ($null -eq $rzArchive.GetEntry("licenses/fonts/$notice")) {
+            throw "Bundled font notice missing: $notice"
+        }
     }
     if ($rzArchive.Entries.Count -ne $rzFiles.Count) {
         throw "ZIP entry count mismatch: expected $($rzFiles.Count), got $(

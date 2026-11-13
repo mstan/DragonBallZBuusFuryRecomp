@@ -30,6 +30,9 @@ int main(int argc, char** argv) {
     }
 
     gbarecomp::RunOptions opts;
+#if defined(GBARECOMP_GAME_VERSION)
+    opts.launcher_game_version = GBARECOMP_GAME_VERSION;
+#endif
     opts.builtin_game_name = "Dragon Ball Z: Buu's Fury";
     opts.builtin_rom_sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087";
     opts.builtin_rom_crc32 = 0x01C1707Fu;

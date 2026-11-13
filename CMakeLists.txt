@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 project(DragonBallZBuusFuryRecomp C CXX)
+include(CTest)
+
+find_package(Git QUIET)
+set(GAME_BUILD_VERSION "" CACHE STRING "Title package version (defaults to git describe)")
+if(NOT GAME_BUILD_VERSION AND GIT_FOUND)
+    execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --always --dirty
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT_VARIABLE GAME_BUILD_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
@@ -58,6 +67,8 @@ target_link_libraries(DragonBallZBuusFuryRecomp PRIVATE
     gbarecomp_armv4t
     "-Wl,--end-group")
 
+set_property(SOURCE src/main.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    GBARECOMP_GAME_VERSION="${GAME_BUILD_VERSION}")
 target_compile_definitions(DragonBallZBuusFuryRecomp PRIVATE
     GBARECOMP_DEFAULT_DEBUG_PORT=19889
     GBARECOMP_WINDOW_TITLE="DragonBallZBuusFuryRecomp"
@@ -84,6 +95,19 @@ if(GBAGAME_RECOMP_UI)
     target_link_libraries(DragonBallZBuusFuryRecomp PRIVATE game_launcher_ui)
     set_property(SOURCE src/main.cpp APPEND PROPERTY
         COMPILE_DEFINITIONS GBAGAME_RECOMP_UI)
+endif()
+
+if(BUILD_TESTING)
+    add_executable(buus_fury_view_cache_test tests/view_cache_test.cpp
+        "${GBARECOMP_ROOT}/tools/bios_smoke/dispatch_stub.cpp")
+    target_include_directories(buus_fury_view_cache_test PRIVATE src
+        "${GBARECOMP_ROOT}/src/runtime" "${GBARECOMP_ROOT}/src/gba"
+        "${GBARECOMP_ROOT}/src/armv4t" "${GBARECOMP_ROOT}/src/debug")
+    target_link_gbarecomp_runtime_stack(buus_fury_view_cache_test)
+    if(GBAGAME_RECOMP_UI)
+        target_link_libraries(buus_fury_view_cache_test PRIVATE game_launcher_ui)
+    endif()
+    add_test(NAME buus_fury_view_cache COMMAND buus_fury_view_cache_test)
 endif()
 
 set(BUUS_FURY_PRELOADED_MODS "${CMAKE_CURRENT_SOURCE_DIR}/mods/preloaded")
