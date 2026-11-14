@@ -3,7 +3,7 @@ project(DragonBallZBuusFuryRecomp C CXX)
 include(CTest)
 
 find_package(Git QUIET)
-set(GAME_BUILD_VERSION "" CACHE STRING "Title package version (defaults to git describe)")
+set(GAME_BUILD_VERSION "0.0.6" CACHE STRING "Title package version (defaults to git describe)")
 if(NOT GAME_BUILD_VERSION AND GIT_FOUND)
     execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --always --dirty
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
