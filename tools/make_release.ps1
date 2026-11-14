@@ -135,7 +135,7 @@ New-Item -ItemType Directory -Force -Path $stageMods | Out-Null
 Copy-Item -LiteralPath $modPackages -Destination $stageMods -Recurse
 
 & (Join-Path $engine 'tools\fetch_tcc.ps1') `
-    -Toolchain (Join-Path $stage 'overlay_toolchain') -EngineRoot $engine
+    -Toolchain (Join-Path $stage 'overlay_toolchain') -EngineRoot $engine -CacheDir (Join-Path $build 'release-toolchain-cache')
 if ($LASTEXITCODE -ne 0) { throw "Overlay toolchain staging failed ($LASTEXITCODE)." }
 
 @"
