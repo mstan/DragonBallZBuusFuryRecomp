@@ -643,18 +643,22 @@ int calculate_view_shift(gba::GbaBus* bus) {
     // centered framing (zero) already fits. Near either field boundary slide
     // the native viewport within the host output instead of requesting
     // nonexistent map pixels and then manufacturing a mirrored/repeated fill.
+    int shift = 0;
     if (minimum <= maximum) {
         if (minimum > 0)
-            return minimum;
-        if (maximum < 0)
-            return maximum;
-        return 0;
+            shift = minimum;
+        else if (maximum < 0)
+            shift = maximum;
+    } else {
+        // A field narrower than the requested host view cannot fill it.
+        shift = minimum + (maximum - minimum) / 2;
     }
 
-    // A field narrower than the requested host view cannot fill it. Center
-    // the authored resource; the tilemap provider will leave only the genuine
-    // out-of-field remainder transparent.
-    return minimum + (maximum - minimum) / 2;
+    // Decorative layers can end inside a larger field. Framing may use only
+    // the added margins: it must not cancel native camera movement or move
+    // the native viewport (and its actors) out of the host output.
+    return std::clamp(shift, -static_cast<int>(g_ws_extra_right),
+                      static_cast<int>(g_ws_extra_left));
 }
 
 extern "C" int buus_fury_bg_x_provider(
