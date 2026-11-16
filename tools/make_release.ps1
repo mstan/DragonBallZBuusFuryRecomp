@@ -162,8 +162,7 @@ Display, audio, input, and enhancement settings persist locally. Configure
 keyboard and gamepad bindings through Player 1 > Configure. Settings
 includes Integer scaling and Scanlines.
 
-Keyboard defaults: arrows = D-pad, Z = A, X = B, Enter = Start, Backspace = Select,
-and Tab = fast-forward. Shift+F1-F9 saves a state; F1-F9 loads one.
+Use the bindings shown in Player 1 > Configure for your keyboard or gamepad.
 
 The ROM and retail GBA BIOS are not included. Supply your own dumps.
 Interactive play has no implicit runtime step limit; only an explicit
