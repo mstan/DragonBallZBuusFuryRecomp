@@ -158,6 +158,9 @@ It has no affiliation with or endorsement from the game publisher.
 5. Select PLAY. Adaptive Widescreen is enabled for fresh profiles; Mods keeps
    any saved enablement choice and lets you change it.
 
+Gameplay Diagnostics > Record Gameplay in Mods records a bounded local replay
+by default. Turn it off to stop recording and save your preference.
+
 Display, audio, input, and enhancement settings persist locally. Configure
 keyboard and gamepad bindings through Player 1 > Configure. Settings
 includes Integer scaling and Scanlines.

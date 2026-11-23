@@ -1,0 +1,20 @@
+format_version = 1
+id = "gbarecomp.feature.gameplay-diagnostics"
+version = "1.0.0"
+name = "Gameplay Diagnostics"
+author = "gbarecomp contributors"
+description = "Record bounded local gameplay diagnostics to help investigate problems."
+license = "MIT"
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "dragon-ball-z-buus-fury-us"
+rom_sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
+
+[[feature]]
+id = "record-gameplay"
+name = "Record Gameplay"
+description = "Save a bounded rolling record of inputs and game state for troubleshooting. Turn this off to stop recording. Your choice is remembered."
+group = "Diagnostics"
+default_enabled = true
