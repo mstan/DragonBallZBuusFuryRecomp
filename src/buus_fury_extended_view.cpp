@@ -715,10 +715,12 @@ extern "C" int buus_fury_obj_x_provider(
     const int x = attr1 & 0x1FFu;
     const int y = attr0 & 0xFFu;
 
-    // Buu's Fury retains the Webfoot convention in which the first three OAM
-    // slots are the top-left portrait/health/energy group. World actors begin
-    // at slot 3 and must stay camera-relative.
-    if (oam_index >= 0 && oam_index <= 2 && x < 96 && y < 32) {
+    // The game reuses the first OAM slots for dialogue and can move HUD pieces
+    // to other slots. Identify the three priority-1 HUD graphics by their
+    // reserved OBJ tiles, keeping each dialogue piece at the same field offset.
+    const unsigned graphic = attr2 & 0x0FFFu;
+    if (x < 96 && y < 32 &&
+        (graphic == 0x0766u || graphic == 0x0776u || graphic == 0x077Eu)) {
         *out_x = x - static_cast<int>(g_ws_extra_left);
         return 1;
     }
