@@ -55,8 +55,14 @@ int main() {
     check(buus_fury::buus_fury_obj_x_provider(3,80,120,0,&actor_x)==1 &&
           actor_x+24>=0 && actor_x+24+16<=288,
           "a native-centered actor remains within the widened viewport");
-    check(buus_fury::buus_fury_obj_x_provider(0,4,8,0,&hud_x)==1 && hud_x+24==8,
+    check(buus_fury::buus_fury_obj_x_provider(10,0x6008,0x8008,0x0766,&hud_x)==1 && hud_x+24==8,
           "boundary framing preserves the native HUD anchor");
+    int panel_left=0, panel_middle=0, panel_right=0;
+    check(buus_fury::buus_fury_obj_x_provider(0,0x2108,0xc028,0x0380,&panel_left)==1 &&
+          buus_fury::buus_fury_obj_x_provider(1,0x2108,0xc068,0x0300,&panel_middle)==1 &&
+          buus_fury::buus_fury_obj_x_provider(2,0xa108,0xc0a8,0x02c0,&panel_right)==1 &&
+          panel_left==40-first_shift && panel_middle-panel_left==64 && panel_right-panel_middle==64,
+          "all three native dialogue pieces receive the same field offset");
     bus->io().write16(0x014,200);
     const int second_shift=buus_fury::calculate_view_shift(bus.get());
     check(first_shift>=-24 && first_shift<=24 && second_shift>=-24 && second_shift<=24,
