@@ -57,6 +57,29 @@ int main() {
           "a native-centered actor remains within the widened viewport");
     check(buus_fury::buus_fury_obj_x_provider(10,0x6008,0x8008,0x0766,&hud_x)==1 && hud_x+24==8,
           "boundary framing preserves the native HUD anchor");
+    auto sprite = [&](unsigned slot, unsigned a0, unsigned a1, unsigned a2) {
+        auto* p = bus->oam_ptr() + slot * 8;
+        for (unsigned attr : {a0, a1, a2}) {
+            *p++ = attr & 0xFFu;
+            *p++ = attr >> 8;
+        }
+    };
+    for (unsigned base : {0x0756u, 0x0772u}) {
+        sprite(12,0x6008,0x8008,base);
+        sprite(6,0x2008,0x4028,base+16);
+        sprite(9,0x6008,0x8038,base+24);
+        int left=0, middle=0, right=0;
+        check(buus_fury::buus_fury_obj_x_provider(12,0x6008,0x8008,base,&left)==1 &&
+              buus_fury::buus_fury_obj_x_provider(6,0x2008,0x4028,base+16,&middle)==1 &&
+              buus_fury::buus_fury_obj_x_provider(9,0x6008,0x8038,base+24,&right)==1 &&
+              left+24==8 && middle-left==32 && right-middle==16,
+              "all health strip pieces anchor across native tile allocations and slots");
+    }
+    sprite(9,0x6008,0x8038,0x078c);
+    int unmatched=0;
+    check(buus_fury::buus_fury_obj_x_provider(12,0x6008,0x8008,0x0772,&unmatched)==1 &&
+          unmatched==8-first_shift,
+          "objects without a matching strip move with the field");
     int panel_left=0, panel_middle=0, panel_right=0;
     check(buus_fury::buus_fury_obj_x_provider(0,0x2108,0xc028,0x0380,&panel_left)==1 &&
           buus_fury::buus_fury_obj_x_provider(1,0x2108,0xc068,0x0300,&panel_middle)==1 &&
