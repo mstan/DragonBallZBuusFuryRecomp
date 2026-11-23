@@ -113,6 +113,51 @@ int distance(int a, int b) {
     return std::abs(a - b);
 }
 
+struct HealthStripPiece {
+    std::uint16_t attr0;
+    std::uint16_t attr1;
+    unsigned tile_offset;
+};
+
+// The guest lays out the three priority-1, 8-bit health strip pieces at
+// x=8,40,56 and y=8. Their tiles are contiguous in OBJ VRAM, but the
+// allocation starts at different tiles in different field scenes.
+constexpr std::array<HealthStripPiece, 3> kHealthStrip{{
+    {0x6008u, 0x8008u, 0u},
+    {0x2008u, 0x4028u, 16u},
+    {0x6008u, 0x8038u, 24u},
+}};
+
+bool is_health_strip_piece(const gba::GbaBus* bus, std::uint16_t attr0,
+                           std::uint16_t attr1, unsigned graphic) {
+    if ((graphic & 0x0C00u) != 0x0400u) return false;
+    const auto role = std::find_if(kHealthStrip.begin(), kHealthStrip.end(),
+        [=](const HealthStripPiece& piece) {
+            return piece.attr0 == attr0 && piece.attr1 == attr1;
+        });
+    if (role == kHealthStrip.end() || (graphic & 0x03FFu) < role->tile_offset)
+        return false;
+
+    const unsigned first_graphic = graphic - role->tile_offset;
+    const auto read16 = [](const std::uint8_t* p) {
+        return static_cast<unsigned>(p[0]) | (static_cast<unsigned>(p[1]) << 8);
+    };
+    const std::uint8_t* oam = bus->oam_ptr();
+    unsigned present = 0;
+    for (unsigned slot = 0; slot < 128; ++slot) {
+        const std::uint8_t* entry = oam + slot * 8;
+        for (std::size_t i = 0; i < kHealthStrip.size(); ++i) {
+            const HealthStripPiece& piece = kHealthStrip[i];
+            if (read16(entry) == piece.attr0 && read16(entry + 2) == piece.attr1 &&
+                (read16(entry + 4) & 0x0FFFu) == first_graphic + piece.tile_offset) {
+                present |= 1u << i;
+            }
+        }
+        if (present == (1u << kHealthStrip.size()) - 1u) return true;
+    }
+    return false;
+}
+
 bool adjacent_obj_generation(std::uint32_t generation) {
     return generation == g_obj_x_generation ||
         generation + 1u == g_obj_x_generation;
@@ -715,12 +760,13 @@ extern "C" int buus_fury_obj_x_provider(
     const int x = attr1 & 0x1FFu;
     const int y = attr0 & 0xFFu;
 
-    // The game reuses the first OAM slots for dialogue and can move HUD pieces
-    // to other slots. Identify the three priority-1 HUD graphics by their
-    // reserved OBJ tiles, keeping each dialogue piece at the same field offset.
+    // HUD pieces can move between OAM slots, which dialogue also reuses.
+    // Keep the established anchors for the known graphics and recognize the
+    // complete native strip when its tile allocation moves.
     const unsigned graphic = attr2 & 0x0FFFu;
     if (x < 96 && y < 32 &&
-        (graphic == 0x0766u || graphic == 0x0776u || graphic == 0x077Eu)) {
+        (graphic == 0x0766u || graphic == 0x0776u || graphic == 0x077Eu ||
+         is_health_strip_piece(bus, attr0, attr1, graphic))) {
         *out_x = x - static_cast<int>(g_ws_extra_left);
         return 1;
     }
