@@ -5900,6 +5900,19 @@ addr = 0x08016AA8
 mode = "thumb"
 note = "NovaPowers fork miss, verified entry (host of 1 observed interior resume point(s), 0 post-BL)"
 
+# The Story Items dispatcher bounds its unsigned selector to eight entries at
+# 0x08016AAC, then loads a halfword offset and adds it to PC at 0x08016AB8.
+# Include every case, including both scrolling directions, in native discovery.
+[[jump_table]]
+addr = 0x08016ABC
+stride = 2
+count = 8
+format = "u16_rel_thumb"
+base = 0x08016ABC
+entries_mode = "thumb"
+name = "story_items_dispatch"
+note = "Reviewed eight-way Story Items dispatcher; original-image offsets and branch targets"
+
 [[extra_func]]
 addr = 0x08016C5E
 mode = "thumb"

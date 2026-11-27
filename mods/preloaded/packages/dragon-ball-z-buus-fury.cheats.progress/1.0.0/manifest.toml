@@ -1,0 +1,77 @@
+format_version = 1
+id = "dragon-ball-z-buus-fury.cheats.progress"
+version = "1.0.0"
+name = "Buu's Fury Progress Cheats"
+author = "mstan (native mod integration)"
+description = "Optional character, experience and inventory cheats for the original USA game."
+license = "MIT"
+resolver = "declarative"
+save_compatibility = "private"
+
+[[target]]
+game_id = "dragon-ball-z-buus-fury-us"
+rom_sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
+
+# Functional code data: https://almarsguides.com/retro/walkthroughs/gba/games/dragonballzbuusfury/codebreaker/
+# The equipment-grant code is excluded: its source documents an equipment-consistency failure.
+
+[[feature]]
+id = "max-experience"
+name = "Max experience (all characters)"
+description = "Keep all eight character records at 999,999,999 experience. This changes saved progress."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "max-experience"
+format = "codebreaker"
+codes = ["43001584 C9FF", "00000008 0068", "43001586 3B9A", "00000008 0068"]
+
+[[feature]]
+id = "max-stats"
+name = "Max stats (all characters)"
+description = "Set all eight character records to the maximum-stat values. This changes saved progress."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "max-stats"
+format = "codebreaker"
+codes = ["43001588 FFFF", "00000008 0068", "4300158A 5AFF", "00000008 0068"]
+
+[[feature]]
+id = "all-characters"
+name = "Unlock all characters"
+description = "Unlock the eight character entries. This changes saved progress."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "all-characters"
+format = "codebreaker"
+codes = ["43001560 0003", "00000008 0068"]
+
+[[feature]]
+id = "all-items"
+name = "All inventory items"
+description = "Grant inventory items. Items already saved remain owned after this is turned off."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "all-items"
+format = "codebreaker"
+codes = ["4300106A 0101", "00000010 0002", "8300108A 0201", "4300108C 0101", "00000018 0002"]
+
+[[feature]]
+id = "all-exhibits"
+name = "All exhibits"
+description = "Grant exhibit entries. Exhibits already saved remain owned after this is turned off."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "all-exhibits"
+format = "codebreaker"
+codes = ["4300108C 0101", "00000019 0002"]
+
