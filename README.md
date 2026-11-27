@@ -89,7 +89,7 @@ code, copyrighted inputs, saves, and build output remain local and are never
 committed.
 
 Contributors can run the validation scripts under [`tools/`](tools/) and
-`pwsh tools/make_release.ps1 -Version 0.0.1` to build a sanitized Windows
+`powershell -File tools/make_release.ps1 -Version 0.0.11` to build a sanitized Windows
 package.
 
 ## License
