@@ -1,0 +1,49 @@
+format_version = 1
+id = "dragon-ball-z-buus-fury.cheats.resources"
+version = "1.0.0"
+name = "Buu's Fury Resource Cheats"
+author = "mstan (native mod integration)"
+description = "Optional health, energy and Zeni cheats for the original USA game."
+license = "MIT"
+resolver = "declarative"
+save_compatibility = "private"
+
+[[target]]
+game_id = "dragon-ball-z-buus-fury-us"
+rom_sha1 = "f1c4b07554d2a3b1ad2f325307051e775ce68087"
+
+[[feature]]
+id = "unlimited-health"
+name = "Unlimited Health (9,999 HP)"
+description = "Give every character 9,999 maximum HP and keep them fully healed. The raised maximum can persist when you save the game."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "unlimited-health"
+format = "codebreaker"
+codes = ["43001578 270F", "00000008 0068", "43001576 270F", "00000008 0068"]
+
+[[feature]]
+id = "unlimited-energy"
+name = "Unlimited Energy (9,999 EP)"
+description = "Give every character 9,999 maximum EP and keep their energy full. The raised maximum can persist when you save the game."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "unlimited-energy"
+format = "codebreaker"
+codes = ["4300157C 270F", "00000008 0068", "4300157A 270F", "00000008 0068"]
+
+[[feature]]
+id = "max-zeni"
+name = "Max Zeni"
+description = "Keep your money at 99,999,999 Zeni. Money changes can persist when you save the game."
+group = "Cheats"
+default_enabled = false
+
+[[cheat]]
+feature = "max-zeni"
+format = "codebreaker"
+codes = ["8300155C E0FF", "8300155E 05F5"]
