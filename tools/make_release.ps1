@@ -31,10 +31,9 @@ if (-not $GbarecompRoot) { $GbarecompRoot = Join-Path $root 'gbarecomp' }
 $engine = (Resolve-Path $GbarecompRoot).Path
 if (-not $RecompUiRoot) { $RecompUiRoot = Join-Path $root 'recomp-ui' }
 $uiRoot = (Resolve-Path -LiteralPath $RecompUiRoot).Path
-if (-not $GeneratedBiosDir) {
-    $GeneratedBiosDir = Join-Path $engine 'src\runtime\generated_bios'
-}
-$generatedBios = (Resolve-Path -LiteralPath $GeneratedBiosDir).Path
+$generatedBios = if ($GeneratedBiosDir) {
+    (Resolve-Path -LiteralPath $GeneratedBiosDir).Path
+} else { '' }
 $build = if ([IO.Path]::IsPathRooted($BuildDir)) { [IO.Path]::GetFullPath($BuildDir) } else { Join-Path $root $BuildDir }
 $out = Join-Path $root 'release-stage'
 $target = 'DragonBallZBuusFuryRecomp'
@@ -52,12 +51,17 @@ foreach ($required in @(
     (Join-Path $mingwBin 'strip.exe'),
     (Join-Path $engine 'CMakeLists.txt'),
     (Join-Path $engine 'tools\fetch_tcc.ps1'),
-    (Join-Path $generatedBios 'bios_recompiled.cpp'),
-    (Join-Path $generatedBios 'bios_recompiled.h'),
     (Join-Path $root 'recomp\launcher\boxart.tga')
 )) {
     if (-not (Test-Path -LiteralPath $required)) {
         throw "Required release dependency is missing: $required"
+    }
+}
+if ($generatedBios) {
+    foreach ($name in @('bios_recompiled.cpp', 'bios_recompiled.h')) {
+        if (-not (Test-Path -LiteralPath (Join-Path $generatedBios $name))) {
+            throw "Explicit firmware source is missing: $name"
+        }
     }
 }
 
@@ -81,6 +85,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
     -DRECOMP_UI_ROOT="$uiRoot" `
     -DGBARECOMP_RUNTIME_UI_ROOT="$uiRoot" `
     "-DGBARECOMP_GENERATED_BIOS_DIR=$generatedBios" `
+    -DGBARECOMP_BIOS_MATH_IMPLEMENTATION=HLE `
     -DGBARECOMP_BUILD_ORACLE=OFF `
     -DGBARECOMP_MINGW_PREFIX_UNIX='/c/msys64/mingw64' `
     -DSDL2_INCLUDE_DIR='C:/msys64/mingw64/include/SDL2' `
@@ -154,8 +159,7 @@ It has no affiliation with or endorsement from the game publisher.
 2. Run $target.exe.
 3. Select your legally obtained clean $gameTitle (USA) ROM.
    Expected SHA-1: $expectedSha1
-4. Select your legally obtained retail gba_bios.bin under Settings > System.
-5. Select PLAY. Adaptive Widescreen is enabled for fresh profiles; Mods keeps
+4. Select PLAY. A separate BIOS dump is not needed. Adaptive Widescreen is enabled for fresh profiles; Mods keeps
    any saved enablement choice and lets you change it.
 
 Gameplay Diagnostics > Record Gameplay in Mods records a bounded local replay
@@ -167,13 +171,14 @@ includes Integer scaling and Scanlines.
 
 Use the bindings shown in Player 1 > Configure for your keyboard or gamepad.
 
-The ROM and retail GBA BIOS are not included. Supply your own dumps.
+The game ROM is not included. Select your own original game image.
 Interactive play has no implicit runtime step limit; only an explicit
 ``--steps`` option applies a deterministic upper bound.
 
 Project: https://github.com/mstan/$target
 Engine: https://github.com/mstan/gbarecomp
 "@ | Out-File -LiteralPath (Join-Path $stage 'README.md') -Encoding utf8
+Copy-Item -LiteralPath (Join-Path $root 'docs/CHEATS.md') -Destination (Join-Path $stage 'CHEATS.md')
 
 # Preserve only the authored runtime display model, not development metadata.
 $sourceToml = [IO.File]::ReadAllText((Join-Path $root 'game.toml'))
