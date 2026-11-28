@@ -196,7 +196,7 @@ foreach ($notice in $fontNotices) {
     Copy-Item -LiteralPath (Join-Path $root "tools/release-licenses/$notice") -Destination $fontNoticeStage
 }
 & (Get-Command python.exe).Source (Join-Path $root 'tools/collect_licenses.py') `
-    $engine $uiRoot (Join-Path $stage 'licenses') --mingw (Split-Path $mingwBin)
+    $engine $uiRoot (Join-Path $stage 'licenses') --mingw (Split-Path $mingwBin) --build-dir $build
 if ($LASTEXITCODE -ne 0) { throw 'Dependency notice staging failed.' }
 
 $forbidden = Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {

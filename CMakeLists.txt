@@ -30,13 +30,8 @@ set(GBARECOMP_ENABLE_MODS ON CACHE BOOL
 
 add_subdirectory("${GBARECOMP_ROOT}" gbarecomp_build EXCLUDE_FROM_ALL)
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/generated/recompiled.cpp")
-    message(FATAL_ERROR
-        "Stale monolithic generated/recompiled.cpp found. Run tools/regen.ps1.")
-endif()
-file(GLOB GAME_GENERATED_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/generated/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/generated/*.cpp")
+gbarecomp_collect_generated_sources(GAME_GENERATED_SOURCES
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/generated")
 
 add_executable(DragonBallZBuusFuryRecomp
     src/main.cpp
@@ -59,13 +54,7 @@ target_include_directories(DragonBallZBuusFuryRecomp PRIVATE
     "${GBARECOMP_ROOT}/src/debug"
     src)
 
-target_link_libraries(DragonBallZBuusFuryRecomp PRIVATE
-    "-Wl,--start-group"
-    gbarecomp_runtime
-    gbarecomp_debug
-    gbarecomp_gba
-    gbarecomp_armv4t
-    "-Wl,--end-group")
+gbarecomp_target_runtime(DragonBallZBuusFuryRecomp)
 
 set_property(SOURCE src/main.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     GBARECOMP_GAME_VERSION="${GAME_BUILD_VERSION}")
@@ -119,9 +108,4 @@ if(EXISTS "${BUUS_FURY_PRELOADED_MODS}/packages")
         COMMENT "Preloading the Buu's Fury mod catalog")
 endif()
 
-if(MSVC)
-    target_link_options(DragonBallZBuusFuryRecomp PRIVATE /STACK:16777216)
-elseif(MINGW OR WIN32)
-    target_link_options(
-        DragonBallZBuusFuryRecomp PRIVATE -Wl,--stack,16777216)
-endif()
+gbarecomp_target_link_host_stack(DragonBallZBuusFuryRecomp PRIVATE 16777216)
